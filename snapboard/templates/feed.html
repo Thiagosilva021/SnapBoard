@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080808"
+    >
+
+    <title>Explorar | SnapBoard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/feed.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <!-- LOGO -->
+
+    <a
+        href="{{ url_for('homepage') }}"
+        class="logo"
+    >
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='img/snapboard-logo.jpeg'
+            ) }}"
+            alt="SnapBoard"
+        >
+
+        <span>
+            SnapBoard
+        </span>
+
+    </a>
+
+
+    <!-- NAVEGAÇÃO -->
+
+    <nav class="navigation">
+
+        <a
+            href="{{ url_for('homepage') }}"
+            class="navigation-link"
+        >
+            Início
+        </a>
+
+
+        <a
+            href="{{ url_for('feed') }}"
+            class="navigation-link active"
+        >
+            Explorar
+        </a>
+
+    </nav>
+
+
+    <!-- PESQUISA -->
+
+    <div class="search">
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+        >
+
+            <circle
+                cx="11"
+                cy="11"
+                r="7"
+            ></circle>
+
+            <path
+                d="m20 20-4-4"
+            ></path>
+
+        </svg>
+
+
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="Pesquisar inspirações..."
+            autocomplete="off"
+            aria-label="Pesquisar postagens"
+        >
+
+    </div>
+
+
+    <!-- AÇÕES -->
+
+    <div class="navbar-actions">
+
+
+        <!-- TEMA -->
+
+        <button
+            type="button"
+            class="icon-button"
+            id="themeToggle"
+            title="Alternar tema"
+            aria-label="Alternar tema"
+        >
+
+            <svg
+                id="themeIcon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+            >
+            </svg>
+
+        </button>
+
+
+        <!-- CRIAR -->
+
+        <a
+            href="{{ url_for(
+                'perfil',
+                id_usuario=current_user.id
+            ) }}#nova-postagem"
+            class="create-button"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+
+            </svg>
+
+            <span>
+                Criar
+            </span>
+
+        </a>
+
+
+        <!-- PERFIL -->
+
+        <a
+            href="{{ url_for(
+                'perfil',
+                id_usuario=current_user.id
+            ) }}"
+            class="profile-link"
+            title="Meu perfil"
+        >
+
+            <div class="profile-avatar">
+
+                {{ current_user.username[0]|upper }}
+
+            </div>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     CONTEÚDO
+===================================================== -->
+
+<main class="feed-page">
+
+
+    <!-- =================================================
+         CABEÇALHO
+    ================================================== -->
+
+    <section class="feed-header">
+
+        <div>
+
+            <span class="feed-label">
+                EXPLORE
+            </span>
+
+
+            <h1>
+                Descubra novas ideias
+            </h1>
+
+
+            <p>
+                Explore imagens e inspirações compartilhadas
+                pela comunidade do SnapBoard.
+            </p>
+
+        </div>
+
+
+        <!-- CONTADOR -->
+
+        <div class="feed-counter">
+
+            <strong>
+                {{ fotos|length }}
+            </strong>
+
+            <span>
+                {% if fotos|length == 1 %}
+                    postagem
+                {% else %}
+                    postagens
+                {% endif %}
+            </span>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         FILTROS
+    ================================================== -->
+
+    <div class="feed-toolbar">
+
+        <button
+            type="button"
+            class="filter-button active"
+            data-filter="all"
+        >
+            Todas
+        </button>
+
+
+        <button
+            type="button"
+            class="filter-button"
+            data-filter="recent"
+        >
+            Recentes
+        </button>
+
+    </div>
+
+
+
+    <!-- =================================================
+         FEED
+    ================================================== -->
+
+    {% if fotos %}
+
+        <section
+            class="feed-grid"
+            id="feedGrid"
+        >
+
+
+            {% for postagem in fotos %}
+
+                <article
+                    class="post-card"
+                    data-author="{{ postagem.usuario.username|lower }}"
+                >
+
+
+                    <!-- IMAGEM -->
+
+                    <div class="post-image">
+
+                        <a
+                            href="{{ url_for(
+                                'perfil',
+                                id_usuario=postagem.usuario.id
+                            ) }}"
+                            class="image-link"
+                        >
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='posts/{}'.format(
+                                        postagem.imagem
+                                    )
+                                ) }}"
+                                alt="Postagem de {{ postagem.usuario.username }}"
+                                loading="lazy"
+                            >
+
+                        </a>
+
+
+                        <!-- AÇÕES -->
+
+                        <div class="post-actions">
+
+
+                            <!-- SALVAR -->
+
+                            <button
+                                type="button"
+                                class="save-button"
+                                title="Salvar postagem"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                >
+
+                                    <path
+                                        d="
+                                            M6 4
+                                            a2 2 0 0 1 2-2
+                                            h8
+                                            a2 2 0 0 1 2 2
+                                            v17
+                                            l-6-3
+                                            -6 3
+                                            Z
+                                        "
+                                    ></path>
+
+                                </svg>
+
+                            </button>
+
+
+                            <!-- VER PERFIL -->
+
+                            <a
+                                href="{{ url_for(
+                                    'perfil',
+                                    id_usuario=postagem.usuario.id
+                                ) }}"
+                                class="profile-button"
+                                title="Ver perfil"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                >
+
+                                    <circle
+                                        cx="12"
+                                        cy="8"
+                                        r="4"
+                                    ></circle>
+
+                                    <path
+                                        d="
+                                            M4 21
+                                            a8 8 0 0 1 16 0
+                                        "
+                                    ></path>
+
+                                </svg>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- INFORMAÇÕES -->
+
+                    <div class="post-info">
+
+
+                        <a
+                            href="{{ url_for(
+                                'perfil',
+                                id_usuario=postagem.usuario.id
+                            ) }}"
+                            class="author"
+                        >
+
+                            <div class="author-avatar">
+
+                                {{ postagem.usuario.username[0]|upper }}
+
+                            </div>
+
+
+                            <div class="author-info">
+
+                                <strong>
+                                    {{ postagem.usuario.username }}
+                                </strong>
+
+                                <span>
+                                    Ver perfil
+                                </span>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             SEM RESULTADOS DA PESQUISA
+        ================================================== -->
+
+        <div
+            class="no-results"
+            id="noResults"
+            hidden
+        >
+
+            <div class="no-results-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                >
+
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7"
+                    ></circle>
+
+                    <path
+                        d="m20 20-4-4"
+                    ></path>
+
+                </svg>
+
+            </div>
+
+
+            <h2>
+                Nenhuma postagem encontrada
+            </h2>
+
+
+            <p>
+                Tente pesquisar por outro usuário ou termo.
+            </p>
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =================================================
+             FEED VAZIO
+        ================================================== -->
+
+        <section class="empty-feed">
+
+            <div class="empty-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                >
+
+                    <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="3"
+                    ></rect>
+
+                    <circle
+                        cx="8.5"
+                        cy="8.5"
+                        r="1.5"
+                    ></circle>
+
+                    <path
+                        d="m21 15-5-5L5 21"
+                    ></path>
+
+                </svg>
+
+            </div>
+
+
+            <h2>
+                Ainda não existem postagens
+            </h2>
+
+
+            <p>
+                Seja a primeira pessoa a compartilhar
+                uma inspiração no SnapBoard.
+            </p>
+
+
+            <a
+                href="{{ url_for(
+                    'perfil',
+                    id_usuario=current_user.id
+                ) }}#nova-postagem"
+                class="primary-button"
+            >
+                Criar postagem
+            </a>
+
+        </section>
+
+    {% endif %}
+
+</main>
+
+
+
+<!-- =====================================================
+     BOTÃO FLUTUANTE MOBILE
+===================================================== -->
+
+<a
+    href="{{ url_for(
+        'perfil',
+        id_usuario=current_user.id
+    ) }}#nova-postagem"
+    class="floating-create"
+    aria-label="Criar postagem"
+>
+
+    <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+    >
+
+        <path d="M12 5v14"></path>
+        <path d="M5 12h14"></path>
+
+    </svg>
+
+</a>
+
+
+
+<!-- JAVASCRIPT -->
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/feed.js'
+    ) }}"
+></script>
+
+</body>
+
+</html>

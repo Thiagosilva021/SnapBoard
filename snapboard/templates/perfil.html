@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080808"
+    >
+
+    <title>
+        {{ usuario.username }} | SnapBoard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/perfil.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <!-- LOGO -->
+
+    <a
+        href="{{ url_for('homepage') }}"
+        class="logo"
+    >
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='img/snapboard-logo.jpeg'
+            ) }}"
+            alt="SnapBoard"
+        >
+
+        <span>
+            SnapBoard
+        </span>
+
+    </a>
+
+
+    <!-- NAVEGAÇÃO -->
+
+    <nav class="navigation">
+
+        <a
+            href="{{ url_for('homepage') }}"
+            class="navigation-link"
+        >
+            Início
+        </a>
+
+
+        <a
+            href="{{ url_for('homepage') }}#explorar"
+            class="navigation-link"
+        >
+            Explorar
+        </a>
+
+    </nav>
+
+
+    <!-- PESQUISA -->
+
+    <div class="search">
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+        >
+
+            <circle
+                cx="11"
+                cy="11"
+                r="7"
+            ></circle>
+
+            <path
+                d="m20 20-4-4"
+            ></path>
+
+        </svg>
+
+
+        <input
+            type="search"
+            placeholder="Pesquisar..."
+            aria-label="Pesquisar"
+        >
+
+    </div>
+
+
+    <!-- AÇÕES -->
+
+    <div class="navbar-actions">
+
+        <!-- TEMA -->
+
+        <button
+            type="button"
+            class="icon-button"
+            id="themeToggle"
+            aria-label="Alternar tema"
+            title="Alternar tema"
+        >
+
+            <svg
+                id="themeIcon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+            >
+            </svg>
+
+        </button>
+
+
+        <!-- CRIAR -->
+
+        <a
+            href="#nova-postagem"
+            class="create-button"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+
+            </svg>
+
+            <span>
+                Criar
+            </span>
+
+        </a>
+
+
+        <!-- PERFIL -->
+
+        <a
+            href="{{ url_for(
+                'perfil',
+                id_usuario=usuario.id
+            ) }}"
+            class="profile-link"
+        >
+
+            <div class="profile-avatar">
+
+                {{ usuario.username[0]|upper }}
+
+            </div>
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     CONTEÚDO
+===================================================== -->
+
+<main class="profile-page">
+
+
+    <!-- =================================================
+         CABEÇALHO DO PERFIL
+    ================================================== -->
+
+    <section class="profile-header">
+
+
+        <!-- AVATAR -->
+
+        <div class="profile-avatar-large">
+
+            {{ usuario.username[0]|upper }}
+
+        </div>
+
+
+        <!-- INFORMAÇÕES -->
+
+        <div class="profile-main-info">
+
+            <span class="profile-label">
+                PERFIL
+            </span>
+
+
+            <h1>
+                {{ usuario.username }}
+            </h1>
+
+
+            <p class="profile-description">
+
+                Este é o seu perfil no SnapBoard.
+                Aqui você pode compartilhar ideias,
+                referências e inspirações.
+
+            </p>
+
+
+            <!-- ESTATÍSTICAS -->
+
+            <div class="profile-stats">
+
+                <div class="stat">
+
+                    <strong>
+                        {{ usuario.fotos|length }}
+                    </strong>
+
+                    <span>
+                        Postagens
+                    </span>
+
+                </div>
+
+
+                <div class="stat-divider"></div>
+
+
+                <div class="stat">
+
+                    <strong>
+                        {{ usuario.fotos|length }}
+                    </strong>
+
+                    <span>
+                        Pins
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AÇÕES DO PERFIL -->
+
+        <div class="profile-actions">
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="editProfileButton"
+            >
+
+                Editar perfil
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         INFORMAÇÕES DO USUÁRIO
+    ================================================== -->
+
+    <section class="user-information">
+
+        <div class="section-title">
+
+            <span>
+                CONTA
+            </span>
+
+            <h2>
+                Informações do usuário
+            </h2>
+
+        </div>
+
+
+        <div class="information-grid">
+
+
+            <!-- USERNAME -->
+
+            <div class="information-card">
+
+                <div class="information-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        ></circle>
+
+                        <path
+                            d="M4 21a8 8 0 0 1 16 0"
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Nome de usuário
+                    </span>
+
+                    <strong>
+                        {{ usuario.username }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EMAIL -->
+
+            <div class="information-card">
+
+                <div class="information-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                    >
+
+                        <rect
+                            x="3"
+                            y="5"
+                            width="18"
+                            height="14"
+                            rx="2"
+                        ></rect>
+
+                        <path
+                            d="m3 7 9 6 9-6"
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        E-mail
+                    </span>
+
+                    <strong>
+                        {{ usuario.email }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         NOVA POSTAGEM
+    ================================================== -->
+
+    {% if form %}
+
+    <section
+        class="create-post-section"
+        id="nova-postagem"
+    >
+
+        <div class="section-title">
+
+            <span>
+                COMPARTILHE
+            </span>
+
+            <h2>
+                Nova postagem
+            </h2>
+
+            <p>
+                Compartilhe uma imagem com a comunidade
+                do SnapBoard.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+            class="upload-form"
+        >
+
+            {{ form.csrf_token }}
+
+
+            <div class="upload-area">
+
+                <div class="upload-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                    >
+
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="3"
+                        ></rect>
+
+                        <circle
+                            cx="8.5"
+                            cy="8.5"
+                            r="1.5"
+                        ></circle>
+
+                        <path
+                            d="m21 15-5-5L5 21"
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <div class="upload-text">
+
+                    <strong>
+                        Escolha uma imagem
+                    </strong>
+
+                    <span>
+                        PNG, JPG ou JPEG
+                    </span>
+
+                </div>
+
+
+                <div class="file-input">
+
+                    {{ form.foto() }}
+
+                </div>
+
+            </div>
+
+
+            {% if form.foto.errors %}
+
+                <div class="field-errors">
+
+                    {% for erro in form.foto.errors %}
+
+                        <span>
+                            {{ erro }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            {{ form.submit(
+                class="primary-button"
+            ) }}
+
+        </form>
+
+    </section>
+
+    {% endif %}
+
+
+
+    <!-- =================================================
+         POSTAGENS
+    ================================================== -->
+
+    <section class="posts-section">
+
+        <div class="posts-header">
+
+            <div class="section-title">
+
+                <span>
+                    GALERIA
+                </span>
+
+                <h2>
+                    Postagens de {{ usuario.username }}
+                </h2>
+
+            </div>
+
+
+            <span class="posts-count">
+
+                {{ usuario.fotos|length }}
+                {% if usuario.fotos|length == 1 %}
+                    postagem
+                {% else %}
+                    postagens
+                {% endif %}
+
+            </span>
+
+        </div>
+
+
+
+        {% if usuario.fotos %}
+
+            <div class="posts-grid">
+
+                {% for postagem in usuario.fotos %}
+
+                    <article class="post-card">
+
+                        <div class="post-image">
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='posts/{}'.format(
+                                        postagem.imagem
+                                    )
+                                ) }}"
+                                alt="Postagem de {{ usuario.username }}"
+                                loading="lazy"
+                            >
+
+
+                            <div class="post-overlay">
+
+                                <button
+                                    type="button"
+                                    class="post-action"
+                                    title="Visualizar postagem"
+                                >
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                    >
+
+                                        <path
+                                            d="M2 12s3.5-7 10-7
+                                               10 7 10 7
+                                               -3.5 7-10 7
+                                               S2 12 2 12Z"
+                                        ></path>
+
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="2.5"
+                                        ></circle>
+
+                                    </svg>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- SEM POSTAGENS -->
+
+            <div class="empty-posts">
+
+                <div class="empty-posts-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                    >
+
+                        <rect
+                            x="3"
+                            y="3"
+                            width="18"
+                            height="18"
+                            rx="3"
+                        ></rect>
+
+                        <circle
+                            cx="8.5"
+                            cy="8.5"
+                            r="1.5"
+                        ></circle>
+
+                        <path
+                            d="m21 15-5-5L5 21"
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <h3>
+                    Nenhuma postagem ainda
+                </h3>
+
+
+                <p>
+                    Compartilhe sua primeira inspiração
+                    no SnapBoard.
+                </p>
+
+
+                {% if form %}
+
+                    <a
+                        href="#nova-postagem"
+                        class="primary-button"
+                    >
+                        Criar primeira postagem
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <span>
+        © 2026 SnapBoard
+    </span>
+
+    <span>
+        Compartilhe · Descubra · Inspire
+    </span>
+
+</footer>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='js/perfil.js'
+    ) }}"
+></script>
+
+</body>
+
+</html>

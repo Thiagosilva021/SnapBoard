@@ -1,0 +1,1141 @@
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+
+    --bg: #080808;
+    --bg-secondary: #101010;
+    --card: #151515;
+
+    --border: #242424;
+
+    --text: #f5f5f5;
+    --text-secondary: #a1a1a1;
+
+    --red: #e50914;
+    --red-hover: #ff1a25;
+
+    --radius: 16px;
+
+    --transition: 0.25s ease;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+}
+
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    width: 100%;
+
+    height: 76px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 28px;
+
+    padding: 0 32px;
+
+    background: rgba(8, 8, 8, 0.92);
+
+    backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+/* LOGO */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+.brand-logo {
+
+    width: 38px;
+
+    height: 38px;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+}
+
+
+.brand-name {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+
+/* NAV */
+
+.main-nav {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.nav-link {
+
+    padding: 9px 15px;
+
+    border-radius: 9px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    transition: var(--transition);
+}
+
+
+.nav-link:hover {
+
+    color: var(--text);
+
+    background: var(--bg-secondary);
+}
+
+
+.nav-link.active {
+
+    color: var(--text);
+
+    background: #1b1b1b;
+}
+
+
+/* SEARCH */
+
+.search-container {
+
+    flex: 1;
+
+    max-width: 600px;
+
+    position: relative;
+
+    margin: 0 auto;
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 17px;
+
+    top: 50%;
+
+    width: 18px;
+
+    height: 18px;
+
+    transform: translateY(-50%);
+
+    color: #777;
+}
+
+
+.search-input {
+
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 18px 0 48px;
+
+    border: 1px solid transparent;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: #161616;
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    transition: var(--transition);
+}
+
+
+.search-input::placeholder {
+
+    color: #777;
+}
+
+
+.search-input:focus {
+
+    border-color: #333;
+
+    background: #1b1b1b;
+}
+
+
+/* ACTIONS */
+
+.navbar-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.icon-button {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+
+.icon-button:hover {
+
+    background: #1b1b1b;
+
+    color: var(--text);
+}
+
+
+.icon-button svg {
+
+    width: 20px;
+
+    height: 20px;
+}
+
+
+.notification-button {
+
+    position: relative;
+}
+
+
+.notification-dot {
+
+    position: absolute;
+
+    top: 8px;
+
+    right: 8px;
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--red);
+}
+
+
+.profile-button img {
+
+    width: 38px;
+
+    height: 38px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 2px solid #292929;
+}
+
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main-content {
+
+    width: min(1500px, 100%);
+
+    margin: auto;
+
+    padding: 40px 32px 100px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.welcome-section {
+
+    position: relative;
+
+    min-height: 330px;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    padding: 50px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    background:
+        radial-gradient(
+            circle at 85% 40%,
+            rgba(229, 9, 20, 0.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #111,
+            #090909
+        );
+}
+
+
+.welcome-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 650px;
+}
+
+
+.welcome-label,
+.section-label {
+
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: var(--red);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+.welcome-section h1 {
+
+    font-size: clamp(36px, 5vw, 62px);
+
+    line-height: 1.02;
+
+    letter-spacing: -2.5px;
+
+    margin-bottom: 20px;
+}
+
+
+.welcome-section h1 span {
+
+    color: var(--red);
+}
+
+
+.welcome-section p {
+
+    max-width: 550px;
+
+    color: var(--text-secondary);
+
+    font-size: 16px;
+
+    line-height: 1.7;
+
+    margin-bottom: 28px;
+}
+
+
+.welcome-actions {
+
+    display: flex;
+
+    gap: 12px;
+}
+
+
+.primary-button,
+.secondary-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 44px;
+
+    padding: 0 20px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: var(--transition);
+}
+
+
+.primary-button {
+
+    background: var(--red);
+
+    color: white;
+}
+
+
+.primary-button:hover {
+
+    background: var(--red-hover);
+
+    transform: translateY(-2px);
+}
+
+
+.secondary-button {
+
+    border: 1px solid #333;
+
+    background: #151515;
+
+    color: var(--text);
+}
+
+
+.secondary-button:hover {
+
+    background: #202020;
+}
+
+
+/* HERO DECORATION */
+
+.hero-decoration {
+
+    position: absolute;
+
+    right: 70px;
+
+    width: 390px;
+
+    height: 300px;
+}
+
+
+.decoration-card {
+
+    position: absolute;
+
+    width: 160px;
+
+    height: 210px;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    border: 1px solid #333;
+
+    background:
+        linear-gradient(
+            135deg,
+            #262626,
+            #101010
+        );
+
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+
+.decoration-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            transparent 50%,
+            rgba(229, 9, 20, 0.35)
+        );
+}
+
+
+.card-one {
+
+    right: 150px;
+
+    top: 50px;
+
+    transform: rotate(-12deg);
+}
+
+
+.card-two {
+
+    right: 60px;
+
+    top: 20px;
+
+    transform: rotate(8deg);
+
+    background:
+        linear-gradient(
+            145deg,
+            #3b1114,
+            #111
+        );
+}
+
+
+.card-three {
+
+    right: 210px;
+
+    top: 70px;
+
+    transform: rotate(18deg);
+
+    background:
+        linear-gradient(
+            145deg,
+            #252525,
+            #090909
+        );
+}
+
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.categories-section,
+.feed-section {
+
+    margin-top: 55px;
+}
+
+
+.section-header {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+
+.section-header h2 {
+
+    font-size: 25px;
+
+    letter-spacing: -0.7px;
+}
+
+
+/* =====================================================
+   CATEGORIAS
+===================================================== */
+
+.categories {
+
+    display: flex;
+
+    gap: 10px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+
+.categories::-webkit-scrollbar {
+    display: none;
+}
+
+
+.category {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 11px 16px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: #111;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+
+.category:hover {
+
+    color: var(--text);
+
+    border-color: #3b3b3b;
+
+    background: #181818;
+
+    transform: translateY(-2px);
+}
+
+
+.category span {
+
+    font-size: 16px;
+}
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.filter-button {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 13px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: #111;
+
+    color: var(--text-secondary);
+
+    cursor: pointer;
+}
+
+
+.filter-button svg {
+
+    width: 17px;
+
+    height: 17px;
+}
+
+
+
+/* =====================================================
+   PIN GRID
+===================================================== */
+
+.pin-grid {
+
+    columns: 4 250px;
+
+    column-gap: 18px;
+}
+
+
+.pin-card {
+
+    display: inline-block;
+
+    width: 100%;
+
+    margin-bottom: 22px;
+
+    break-inside: avoid;
+}
+
+
+.pin-image {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 15px;
+
+    background: #151515;
+}
+
+
+.pin-image img {
+
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    transition:
+        transform 0.4s ease;
+}
+
+
+.pin-card:hover .pin-image img {
+
+    transform: scale(1.035);
+}
+
+
+.save-button {
+
+    position: absolute;
+
+    top: 12px;
+
+    right: 12px;
+
+    padding: 9px 14px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: var(--red);
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    opacity: 0;
+
+    transform: translateY(-5px);
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+
+.pin-card:hover .save-button {
+
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+.pin-info {
+
+    padding: 11px 3px;
+}
+
+
+.pin-info h3 {
+
+    margin-bottom: 9px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    font-weight: 600;
+}
+
+
+.pin-author {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+.author-avatar {
+
+    width: 24px;
+
+    height: 24px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #262626;
+
+    color: white;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+
+/* =====================================================
+   BOTÃO FLUTUANTE
+===================================================== */
+
+.floating-create {
+
+    position: fixed;
+
+    right: 28px;
+
+    bottom: 28px;
+
+    z-index: 50;
+
+    width: 56px;
+
+    height: 56px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: var(--red);
+
+    color: white;
+
+    box-shadow:
+        0 10px 30px rgba(229, 9, 20, 0.35);
+
+    transition: var(--transition);
+}
+
+
+.floating-create:hover {
+
+    background: var(--red-hover);
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 40px rgba(229, 9, 20, 0.45);
+}
+
+
+.floating-create svg {
+
+    width: 23px;
+
+    height: 23px;
+}
+
+
+
+/* =====================================================
+   RESPONSIVIDADE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .main-nav {
+        display: none;
+    }
+
+    .hero-decoration {
+        opacity: 0.4;
+        right: -70px;
+    }
+
+    .pin-grid {
+        columns: 3 220px;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .navbar {
+
+        height: 65px;
+
+        padding: 0 16px;
+
+        gap: 10px;
+    }
+
+
+    .brand-name {
+        display: none;
+    }
+
+
+    .search-container {
+        max-width: none;
+    }
+
+
+    .navbar-actions {
+        gap: 2px;
+    }
+
+
+    .icon-button {
+        width: 36px;
+        height: 36px;
+    }
+
+
+    .profile-button img {
+
+        width: 34px;
+
+        height: 34px;
+    }
+
+
+    .main-content {
+
+        padding: 20px 16px 90px;
+    }
+
+
+    .welcome-section {
+
+        min-height: 420px;
+
+        padding: 32px 24px;
+
+        align-items: flex-start;
+    }
+
+
+    .welcome-section h1 {
+
+        font-size: 39px;
+
+        letter-spacing: -1.7px;
+    }
+
+
+    .welcome-section p {
+
+        font-size: 14px;
+    }
+
+
+    .hero-decoration {
+
+        right: -100px;
+
+        bottom: -40px;
+
+        opacity: 0.3;
+    }
+
+
+    .welcome-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .primary-button,
+    .secondary-button {
+
+        width: 100%;
+    }
+
+
+    .categories-section,
+    .feed-section {
+
+        margin-top: 40px;
+    }
+
+
+    .section-header h2 {
+
+        font-size: 21px;
+    }
+
+
+    .pin-grid {
+
+        columns: 2 150px;
+
+        column-gap: 10px;
+    }
+
+
+    .pin-card {
+
+        margin-bottom: 15px;
+    }
+
+
+    .save-button {
+
+        opacity: 1;
+
+        transform: none;
+
+        padding: 7px 10px;
+
+        font-size: 10px;
+    }
+
+
+    .filter-button {
+
+        font-size: 0;
+    }
+
+
+    .floating-create {
+
+        right: 20px;
+
+        bottom: 20px;
+
+        width: 52px;
+
+        height: 52px;
+    }
+
+}
+
+
+@media (max-width: 400px) {
+
+    .search-input {
+
+        font-size: 12px;
+
+        padding-left: 42px;
+    }
+
+
+    .search-icon {
+
+        left: 13px;
+    }
+
+
+    .pin-grid {
+
+        columns: 2 130px;
+    }
+
+}
