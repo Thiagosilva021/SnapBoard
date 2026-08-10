@@ -27,11 +27,29 @@ PROJETOSNAPBOARD/
 │   └── snapboard.db
 │
 ├── snapboard/
+│   │
 │   ├── static/
-│   │   └── style.css
+│   │   │
+│   │   ├── css/
+│   │   │   ├── auth.css
+│   │   │   ├── feed.css
+│   │   │   ├── home.css
+│   │   │   └── perfil.css
+│   │   │
+│   │   ├── img/
+│   │   │   └── snapboard-logo.jpeg
+│   │   │
+│   │   ├── js/
+│   │   │   ├── feed.js
+│   │   │   ├── home.js
+│   │   │   ├── perfil.js
+│   │   │   └── theme.js
+│   │   │
+│   │   └── posts/
 │   │
 │   ├── templates/
 │   │   ├── criar_conta.html
+│   │   ├── feed.html
 │   │   ├── homepage.html
 │   │   ├── login.html
 │   │   └── perfil.html
@@ -47,5 +65,5 @@ PROJETOSNAPBOARD/
 ├── .gitignore
 ├── criar_banco.py
 ├── main.py
-├── requirements.txt
-└── README.md
+├── README.md
+└── requirements.txt
