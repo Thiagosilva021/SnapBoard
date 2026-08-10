@@ -63,7 +63,6 @@ PROJETOSNAPBOARD/
 │
 ├── .env
 ├── .gitignore
-├── criar_banco.py
 ├── main.py
 ├── README.md
 └── requirements.txt
