@@ -164,57 +164,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       SALVAR
+         CURTIDAS
     ================================================= */
 
-    const saveButtons =
-        document.querySelectorAll(
-            ".save-button"
+const likeButtons = document.querySelectorAll(".like-button");
+
+likeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        button.classList.toggle("liked");
+
+        const liked = button.classList.contains("liked");
+
+        button.title = liked
+            ? "Remover curtida"
+            : "Curtir postagem";
+
+        button.setAttribute(
+            "aria-label",
+            liked
+                ? "Remover curtida"
+                : "Curtir postagem"
         );
-
-
-    saveButtons.forEach(button => {
-
-        button.addEventListener(
-            "click",
-            event => {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                const saved =
-                    button.classList.toggle(
-                        "saved"
-                    );
-
-
-                const svg =
-                    button.querySelector("svg");
-
-
-                if (saved) {
-
-                    button.title =
-                        "Postagem salva";
-
-                    svg.style.fill =
-                        "currentColor";
-
-                } else {
-
-                    button.title =
-                        "Salvar postagem";
-
-                    svg.style.fill =
-                        "none";
-                }
-
-            }
-        );
-
     });
+});
 
 
 

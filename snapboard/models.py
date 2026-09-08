@@ -8,13 +8,19 @@ def load_user(user_id):
 
 class Usuario(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    username = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(254), unique=True, nullable=False)
     senha = db.Column(db.String(100), nullable=False)
-    fotos = db.relationship('Postagem', backref='usuario', lazy=True)
+    fotos = db.relationship('Postagem', backref='usuario', cascade='all, delete-orphan', lazy=True)
 
 class Postagem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     imagem = db.Column(db.String(200), default='default.jpg')
     data_criacao = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(UTC)) # Use uma lambda para garantir que o horário UTC seja definido no momento da criação do objeto.
     id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+class Curtida(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    id_postagem = db.Column(db.Integer, db.ForeignKey('postagem.id'), nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(UTC)) # Use uma lambda para garantir que o horário UTC seja definido no momento da criação do objeto.

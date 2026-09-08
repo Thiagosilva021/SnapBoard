@@ -1343,3 +1343,235 @@ input {
     }
 
 }
+
+/* =====================================================
+   VISUALIZAÇÃO DA IMAGEM
+===================================================== */
+
+.image-preview-button {
+
+    width: 100%;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: zoom-in;
+
+    display: block;
+
+    overflow: hidden;
+
+}
+
+
+/* Imagem */
+
+.image-preview-button img {
+
+    width: 100%;
+
+    display: block;
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
+}
+
+
+/* Efeito ao passar o mouse */
+
+.image-preview-button:hover img {
+
+    transform: scale(1.03);
+
+    filter: brightness(0.85);
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.image-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    background: rgba(0, 0, 0, 0.92);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+
+/* Modal aberto */
+
+.image-modal.active {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+
+}
+
+
+/* Imagem ampliada */
+
+.image-modal img {
+
+    max-width: 90vw;
+
+    max-height: 90vh;
+
+    width: auto;
+
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5);
+
+    animation: imageZoom 0.25s ease;
+
+}
+
+
+/* Botão fechar */
+
+.modal-close {
+
+    position: absolute;
+
+    top: 20px;
+
+    right: 25px;
+
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    color: white;
+
+    font-size: 30px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.modal-close:hover {
+
+    background: #e50914;
+
+    transform: rotate(90deg);
+
+}
+
+
+/* Impede o scroll da página */
+
+body.modal-open {
+
+    overflow: hidden;
+
+}
+
+
+/* Animação */
+
+@keyframes imageZoom {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.92);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+
+    .image-modal {
+
+        padding: 15px;
+
+    }
+
+    .image-modal img {
+
+        max-width: 95vw;
+
+        max-height: 85vh;
+
+        border-radius: 6px;
+
+    }
+
+    .modal-close {
+
+        top: 12px;
+
+        right: 12px;
+
+        width: 40px;
+
+        height: 40px;
+
+        font-size: 26px;
+
+    }
+
+}

@@ -1,21 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const themeToggle =
-        document.getElementById("themeToggle");
+    // =====================================================
+    // TEMA CLARO / ESCURO
+    // =====================================================
 
-    const themeIcon =
-        document.getElementById("themeIcon");
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
 
 
     function setTheme(theme) {
 
-        document.documentElement.dataset.theme =
-            theme;
+        document.documentElement.dataset.theme = theme;
 
         localStorage.setItem(
             "snapboard-theme",
             theme
         );
+
+
+        if (!themeIcon) {
+            return;
+        }
 
 
         if (theme === "light") {
@@ -31,14 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 <path d="M12 20v2"></path>
 
                 <path d="m4.93 4.93 1.41 1.41"></path>
-
                 <path d="m17.66 17.66 1.41 1.41"></path>
 
                 <path d="M2 12h2"></path>
                 <path d="M20 12h2"></path>
 
                 <path d="m4.93 19.07 1.41-1.41"></path>
-
                 <path d="m17.66 6.34 1.41-1.41"></path>
             `;
 
@@ -59,10 +62,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    const savedTheme =
-        localStorage.getItem(
-            "snapboard-theme"
-        );
+    // =====================================================
+    // CARREGAR TEMA SALVO
+    // =====================================================
+
+    const savedTheme = localStorage.getItem(
+        "snapboard-theme"
+    );
 
 
     if (savedTheme) {
@@ -75,6 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+    // =====================================================
+    // BOTÃO DE TEMA
+    // =====================================================
 
     themeToggle?.addEventListener(
         "click",
@@ -91,5 +101,136 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
     );
+
+
+    // =====================================================
+    // VISUALIZAÇÃO DA IMAGEM
+    // =====================================================
+
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+
+
+    function abrirImagem(src) {
+
+        if (!modal || !modalImage) {
+            return;
+        }
+
+
+        modalImage.src = src;
+
+        modal.classList.add("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.classList.add(
+            "modal-open"
+        );
+    }
+
+
+    function fecharImagem() {
+
+        if (!modal || !modalImage) {
+            return;
+        }
+
+
+        modal.classList.remove("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.classList.remove(
+            "modal-open"
+        );
+
+
+        setTimeout(() => {
+
+            if (!modal.classList.contains("active")) {
+
+                modalImage.src = "";
+
+            }
+
+        }, 250);
+    }
+
+
+    // =====================================================
+    // CLIQUE NAS IMAGENS
+    // =====================================================
+
+    document.querySelectorAll(".image-preview-button").forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const imagem =
+                        button.dataset.image;
+
+                    if (imagem) {
+
+                        abrirImagem(imagem);
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    // =====================================================
+    // FECHAR COM ESC
+    // =====================================================
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                fecharImagem();
+
+            }
+
+        }
+    );
+
+
+    // =====================================================
+    // FECHAR CLICANDO NO FUNDO
+    // =====================================================
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target === modal ||
+                    event.target.classList.contains(
+                        "image-modal-backdrop"
+                    )
+                ) {
+
+                    fecharImagem();
+
+                }
+
+            }
+        );
+
+    }
 
 });

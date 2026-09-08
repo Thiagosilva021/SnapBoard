@@ -1291,3 +1291,82 @@ input {
     }
 
 }
+
+/* =====================================================
+   BOTAO DE DOWNLOAD
+===================================================== */
+
+.download-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+
+    text-decoration: none;
+
+    transition: 
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.download-button:hover {
+    background: #e50914;
+    transform: scale(1.08);
+}
+
+.download-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* =====================================================
+   BOTAO DE LIKE
+===================================================== */
+
+
+.like-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 50%;
+
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.like-button:hover {
+    background: #e50914;
+    transform: scale(1.08);
+}
+
+.like-button.liked {
+    background: #e50914;
+}
+
+.like-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.like-button.liked svg {
+    fill: currentColor;
+}

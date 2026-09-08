@@ -41,6 +41,13 @@
 
     <nav class="main-nav">
 
+        <a href="{{ url_for('login') }}"
+           class="nav-link">
+
+            Faça login
+
+        </a>
+
         <a href="{{ url_for('homepage') }}"
            class="nav-link active">
 
@@ -241,20 +248,11 @@
 ====================================================== -->
 
 <a
-    href="#criar"
+    href="{{ url_for('perfil', id_usuario=current_user.id) }}"
     class="floating-create"
-    aria-label="Criar novo Pin"
 >
 
- {% if form %}
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.csrf_token }}
-
-        {{ form.foto() }} <br>
-        {{ form.submit() }}
-
-    </form>
-    {% endif %}
+ 
     <svg
         viewBox="0 0 24 24"
         fill="none"
