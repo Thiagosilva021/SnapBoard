@@ -3,6 +3,7 @@ from snapboard import app, db, bcrypt
 from snapboard.forms import FormLogin, FormCriarConta, FormFoto
 from snapboard.models import Usuario, Postagem, Curtida
 from flask_login import login_required, login_user, logout_user, current_user
+from sqlalchemy.orm import joinedload
 import uuid
 import os
 from werkzeug.utils import secure_filename
@@ -43,7 +44,7 @@ def criar_conta():
 def logout():
     logout_user()
     flash('Você saiu da sua conta.', 'info')
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route("/perfil/<int:id_usuario>", methods=['GET', 'POST'])   # <int:> em vez de string livre
 @login_required
@@ -85,12 +86,49 @@ def perfil(id_usuario):
 @login_required
 def feed():
     pagina = request.args.get('pagina', 1, type=int)
+    termo = request.args.get('q', '', type=str).strip()
+
+    consulta = Postagem.query.options(joinedload(Postagem.usuario))  # evita 1 query extra por postagem (N+1)
+
+    if termo:
+        # Filtra no banco (antes o filtro só acontecia no JS, em cima dos
+        # 20 posts já carregados na página — resultados em outras páginas
+        # de paginação nunca eram encontrados).
+        consulta = consulta.join(Usuario).filter(Usuario.username.ilike(f'%{termo}%'))
+
     paginacao = (
-        Postagem.query
+        consulta
         .order_by(Postagem.data_criacao.desc())
         .paginate(page=pagina, per_page=20, error_out=False)
     )
-    return render_template('feed.html', fotos=paginacao.items, paginacao=paginacao)
+
+    usuario_encontrado = None
+    if termo and paginacao.total == 0:
+        # O termo pesquisado pode ser de um usuário que existe mas ainda
+        # não publicou nada — nesse caso não há post pra filtrar, mas
+        # ainda faz sentido levar direto para o perfil dele.
+        usuario_encontrado = Usuario.query.filter(Usuario.username.ilike(f'%{termo}%')).first()
+
+    # ids das postagens que o usuário atual já curtiu, pra pintar o
+    # coração certo sem precisar de uma query por postagem (N+1).
+    ids_pagina = [p.id for p in paginacao.items]
+    curtidas_usuario = set()
+    if ids_pagina:
+        curtidas_usuario = {
+            c.id_postagem for c in Curtida.query.filter(
+                Curtida.id_usuario == current_user.id,
+                Curtida.id_postagem.in_(ids_pagina)
+            ).all()
+        }
+
+    return render_template(
+        'feed.html',
+        fotos=paginacao.items,
+        paginacao=paginacao,
+        termo_pesquisa=termo,
+        usuario_encontrado=usuario_encontrado,
+        curtidas_usuario=curtidas_usuario,
+    )
 
 @app.route('/excluir_postagem/<int:id>', methods=['POST'])
 @login_required
@@ -121,11 +159,18 @@ def excluir_postagem(id):
 @app.route('/baixar_imagem/<int:id>')
 @login_required
 def baixar_imagem(id):
+    # NOTA: o feed atual linka a imagem/download direto para
+    # /static/posts/<arquivo>, que o Flask serve publicamente e sem
+    # autenticação — essa rota (restrita ao dono) hoje não é chamada
+    # por nenhum template. Ficou assim por decisão consciente de manter
+    # o comportamento atual sem mexer no front-end; ver relatório.
 
     postagem = Postagem.query.get_or_404(id)# validar se a postagem existe
 
-    # Apenas o dono da postagem pode baixar
-    if postagem.usuario_id != current_user.id:
+    # Apenas o dono da postagem pode baixar por esta rota.
+    # (nome do campo corrigido: o model usa id_usuario, não usuario_id —
+    # antes disso a checagem sempre lançava AttributeError)
+    if postagem.id_usuario != current_user.id:
         flash('Você não pode baixar esta imagem.', 'danger')
         return redirect(
             url_for('perfil', id_usuario=current_user.id)
@@ -141,31 +186,78 @@ def baixar_imagem(id):
 @login_required
 def curtir(id):
     postagem = Postagem.query.get_or_404(id)# validar se a postagem existe
-    curtida = Curtida.query.filter_by(usuario_id=current_user.id, postagem_id=id).first()
+    curtida = Curtida.query.filter_by(id_usuario=current_user.id, id_postagem=id).first()
+    eh_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     if not curtida:
         try:
-            db.session.add(Curtida(usuario_id=current_user.id, postagem_id=id))
+            db.session.add(Curtida(id_usuario=current_user.id, id_postagem=id))
             db.session.commit()
+            curtiu_agora = True
         except Exception:
             db.session.rollback()
+            if eh_ajax:
+                return {'sucesso': False, 'mensagem': 'Não foi possível curtir a postagem.'}, 500
             flash('Não foi possível curtir a postagem. Tente novamente.', 'danger')
+            return redirect(url_for('feed'))
     else:
         try:
             db.session.delete(curtida)
             db.session.commit()
+            curtiu_agora = False
         except Exception:
             db.session.rollback()
+            if eh_ajax:
+                return {'sucesso': False, 'mensagem': 'Não foi possível remover a curtida.'}, 500
             flash('Não foi possível remover a curtida. Tente novamente.', 'danger')
+            return redirect(url_for('feed'))
+
+    if eh_ajax:
+        return {'sucesso': True, 'curtiu': curtiu_agora, 'total': len(postagem.curtidas)}
 
     return redirect(url_for('feed'))
 
 @app.route('/pesquisar', methods=['GET', 'POST'])
 @login_required
 def pesquisar():
-    if request.method == 'POST': # verifica se o método é POST
-        termo = request.form.get('termo') # pega o termo de pesquisa do formulário
-        if termo:
-            resultados = Usuario.query.filter(Usuario.username.ilike(f'%{termo}%')).all() # busca usuários cujo username contenha o termo, ignorando maiúsculas/minúsculas
-            return render_template('perfil.search', resultados=resultados, termo=termo) # renderiza a página de pesquisa com os resultados 
-    return render_template('perfil.search', resultados=[], termo='')
+    # Corrigido: antes chamava render_template('perfil.search', ...), um
+    # nome de template inexistente — toda requisição a /pesquisar
+    # derrubava a aplicação com TemplateNotFound. O front-end atual já
+    # resolve a busca via /feed?q=termo, então esta rota agora só
+    # redireciona para lá em vez de duplicar essa lógica com uma tela
+    # própria (que também não existe hoje).
+    termo = request.form.get('termo') or request.args.get('termo', '')
+    return redirect(url_for('feed', q=termo) if termo else url_for('feed'))
+
+
+# =====================================================
+# TRATAMENTO DE ERROS
+# Antes, qualquer 404/403/500 mostrava a página padrão
+# do Flask/Werkzeug. Estas páginas usam o mesmo visual
+# do restante do site (base.css / auth.css).
+# =====================================================
+
+@app.errorhandler(404)
+def erro_404(erro):
+    return render_template('erro.html', codigo=404,
+                            titulo='Página não encontrada',
+                            mensagem='O que você procurava não existe ou foi removido.'), 404
+
+@app.errorhandler(403)
+def erro_403(erro):
+    return render_template('erro.html', codigo=403,
+                            titulo='Acesso não autorizado',
+                            mensagem='Você não tem permissão para acessar este recurso.'), 403
+
+@app.errorhandler(413)
+def erro_413(erro):
+    return render_template('erro.html', codigo=413,
+                            titulo='Arquivo muito grande',
+                            mensagem='O arquivo enviado passa do limite de 5 MB. Escolha uma imagem menor.'), 413
+
+@app.errorhandler(500)
+def erro_500(erro):
+    db.session.rollback()  # garante que uma transação quebrada não vaze para a próxima requisição
+    return render_template('erro.html', codigo=500,
+                            titulo='Algo deu errado',
+                            mensagem='Ocorreu um erro interno. Já estamos cientes do problema.'), 500

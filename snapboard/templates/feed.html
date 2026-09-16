@@ -11,6 +11,10 @@
 
     <link
       rel="stylesheet"
+      href="{{ url_for('static', filename='css/base.css') }}"
+    />
+    <link
+      rel="stylesheet"
       href="{{ url_for('static', filename='css/feed.css') }}"
     />
   </head>
@@ -62,9 +66,11 @@
         <input
           type="search"
           id="searchInput"
-          placeholder="Pesquisar inspirações..."
+          data-search-input
+          value="{{ termo_pesquisa }}"
+          placeholder="Pesquisar por usuário..."
           autocomplete="off"
-          aria-label="Pesquisar postagens"
+          aria-label="Pesquisar postagens por usuário"
         />
       </div>
 
@@ -76,17 +82,34 @@
         <button
           type="button"
           class="icon-button"
-          id="themeToggle"
+          data-theme-toggle
           title="Alternar tema"
           aria-label="Alternar tema"
         >
           <svg
-            id="themeIcon"
+            data-theme-icon
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             stroke-width="1.8"
           ></svg>
+        </button>
+
+        <!-- MENU MOBILE -->
+
+        <button
+          type="button"
+          class="nav-toggle"
+          data-nav-toggle
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          aria-controls="mobileNav"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 6h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 18h16"></path>
+          </svg>
         </button>
 
         <!-- CRIAR -->
@@ -118,6 +141,14 @@
         </a>
       </div>
     </header>
+
+    <!-- MENU MOBILE -->
+    <nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
+      <a href="{{ url_for('homepage') }}">Início</a>
+      <a href="{{ url_for('feed') }}">Explorar</a>
+      <a href="{{ url_for('perfil', id_usuario=current_user.id) }}">Meu perfil</a>
+      <a href="{{ url_for('logout') }}">Sair</a>
+    </nav>
 
     <!-- =====================================================
      CONTEÚDO
@@ -156,11 +187,11 @@
     ================================================== -->
 
       <div class="feed-toolbar">
-        <button type="button" class="filter-button active" data-filter="all">
+        <button type="button" class="filter-button active" data-filter="all" aria-pressed="true">
           Todas
         </button>
 
-        <button type="button" class="filter-button" data-filter="recent">
+        <button type="button" class="filter-button" data-filter="recent" aria-pressed="false">
           Recentes
         </button>
       </div>
@@ -206,33 +237,43 @@
 
               <!-- CURTIR -->
 
-<button
-    type="button"
-    class="like-button"
-    title="Curtir postagem"
-    aria-label="Curtir postagem"
+<form
+    method="POST"
+    action="{{ url_for('curtir', id=postagem.id) }}"
+    class="like-form"
+    data-like-form
 >
-    <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.8"
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <button
+        type="submit"
+        class="like-button{{ ' liked' if postagem.id in curtidas_usuario else '' }}"
+        title="{{ 'Remover curtida' if postagem.id in curtidas_usuario else 'Curtir postagem' }}"
+        aria-label="{{ 'Remover curtida' if postagem.id in curtidas_usuario else 'Curtir postagem' }}"
+        aria-pressed="{{ 'true' if postagem.id in curtidas_usuario else 'false' }}"
     >
-        <path
-            d="
-                M20.84 4.61
-                a5.5 5.5 0 0 0-7.78 0
-                L12 5.67
-                l-1.06-1.06
-                a5.5 5.5 0 0 0-7.78 7.78
-                L12 21.23
-                l8.84-8.84
-                a5.5 5.5 0 0 0 0-7.78
-                Z
-            "
-        ></path>
-    </svg>
-</button>
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+        >
+            <path
+                d="
+                    M20.84 4.61
+                    a5.5 5.5 0 0 0-7.78 0
+                    L12 5.67
+                    l-1.06-1.06
+                    a5.5 5.5 0 0 0-7.78 7.78
+                    L12 21.23
+                    l8.84-8.84
+                    a5.5 5.5 0 0 0 0-7.78
+                    Z
+                "
+            ></path>
+        </svg>
+    </button>
+</form>
 
               <!-- BAIXAR FOTO -->
 
@@ -315,6 +356,30 @@
         {% endfor %}
       </section>
 
+      {% if paginacao.pages > 1 %}
+      <nav class="feed-pagination" aria-label="Paginação do feed">
+        <a
+          href="{{ url_for('feed', pagina=paginacao.prev_num, q=termo_pesquisa) if paginacao.has_prev else '#' }}"
+          class="secondary-button{{ ' is-disabled' if not paginacao.has_prev }}"
+          {% if not paginacao.has_prev %}aria-disabled="true" tabindex="-1"{% endif %}
+        >
+          Anterior
+        </a>
+
+        <span class="feed-pagination-info">
+          Página {{ paginacao.page }} de {{ paginacao.pages }}
+        </span>
+
+        <a
+          href="{{ url_for('feed', pagina=paginacao.next_num, q=termo_pesquisa) if paginacao.has_next else '#' }}"
+          class="secondary-button{{ ' is-disabled' if not paginacao.has_next }}"
+          {% if not paginacao.has_next %}aria-disabled="true" tabindex="-1"{% endif %}
+        >
+          Próxima
+        </a>
+      </nav>
+      {% endif %}
+
       <!-- =================================================
              SEM RESULTADOS DA PESQUISA
         ================================================== -->
@@ -337,6 +402,45 @@
 
         <p>Tente pesquisar por outro usuário ou termo.</p>
       </div>
+
+      {% elif termo_pesquisa %}
+
+      <!-- =================================================
+             SEM RESULTADOS DA PESQUISA (nenhuma postagem
+             corresponde ao termo pesquisado)
+        ================================================== -->
+
+      <section class="empty-feed">
+        <div class="empty-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+          >
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-4-4"></path>
+          </svg>
+        </div>
+
+        <h2>Nenhuma postagem encontrada para "{{ termo_pesquisa }}"</h2>
+
+        {% if usuario_encontrado %}
+          <p>
+            Encontramos o perfil de <strong>{{ usuario_encontrado.username }}</strong>,
+            mas ainda não há postagens dele(a).
+          </p>
+
+          <a
+            href="{{ url_for('perfil', id_usuario=usuario_encontrado.id) }}"
+            class="primary-button"
+          >
+            Ver perfil de {{ usuario_encontrado.username }}
+          </a>
+        {% else %}
+          <p>Tente pesquisar por outro nome de usuário.</p>
+        {% endif %}
+      </section>
 
       {% else %}
 
@@ -405,6 +509,8 @@
 
     <!-- JAVASCRIPT -->
 
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
     <script src="{{ url_for(
         'static',
         filename='js/feed.js'

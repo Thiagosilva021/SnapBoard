@@ -1,7 +1,25 @@
+/* =====================================================
+   SNAPBOARD — THEME.JS
+   Módulo compartilhado por TODAS as páginas:
+   - alternância de tema claro/escuro
+   - mostrar/ocultar senha
+   - menu mobile (hambúrguer)
+   - sistema de toast (feedback rápido)
+
+   Usa atributos data-* como gancho, então funciona em
+   qualquer página sem precisar duplicar o código.
+===================================================== */
+
 (() => {
     const root = document.documentElement;
+
+    /* =================================================
+       TEMA CLARO / ESCURO
+    ================================================= */
+
     const toggle = document.querySelector("[data-theme-toggle]");
     const themeIcon = document.querySelector("[data-theme-icon]");
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 
     const savedTheme = localStorage.getItem("snapboard-theme");
     const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -11,10 +29,16 @@
 
     function updateThemeIcon() {
         if (!themeIcon) return;
+
         const isDark = root.dataset.theme === "dark";
+
         themeIcon.innerHTML = isDark
             ? '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>'
             : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>';
+
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute("content", isDark ? "#080808" : "#f6f6f6");
+        }
     }
 
     updateThemeIcon();
@@ -25,6 +49,10 @@
         localStorage.setItem("snapboard-theme", nextTheme);
         updateThemeIcon();
     });
+
+    /* =================================================
+       MOSTRAR / OCULTAR SENHA
+    ================================================= */
 
     document.querySelectorAll("[data-password-toggle]").forEach((button) => {
         button.addEventListener("click", () => {
@@ -41,4 +69,59 @@
             button.setAttribute("aria-label", isPassword ? "Ocultar senha" : "Mostrar senha");
         });
     });
+
+    /* =================================================
+       MENU MOBILE (hambúrguer)
+    ================================================= */
+
+    const navToggle = document.querySelector("[data-nav-toggle]");
+    const mobilePanel = document.querySelector("[data-mobile-nav]");
+
+    navToggle?.addEventListener("click", () => {
+        const isOpen = mobilePanel?.classList.toggle("open");
+        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && mobilePanel?.classList.contains("open")) {
+            mobilePanel.classList.remove("open");
+            navToggle?.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    /* =================================================
+       TOAST — feedback rápido e não bloqueante
+       Uso: window.snapboardToast("Mensagem")
+    ================================================= */
+
+    function ensureToastStack() {
+        let stack = document.querySelector(".toast-stack");
+
+        if (!stack) {
+            stack = document.createElement("div");
+            stack.className = "toast-stack";
+            stack.setAttribute("role", "status");
+            stack.setAttribute("aria-live", "polite");
+            document.body.appendChild(stack);
+        }
+
+        return stack;
+    }
+
+    window.snapboardToast = function snapboardToast(message, duration = 2800) {
+        const stack = ensureToastStack();
+
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+
+        stack.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add("show"));
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 250);
+        }, duration);
+    };
 })();

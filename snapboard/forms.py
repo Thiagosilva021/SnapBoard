@@ -23,6 +23,14 @@ class FormCriarConta(FlaskForm):
         if usuario:
             raise ValidationError('Este email já está em uso. Por favor, escolha outro.')
 
+    # Validação personalizada para verificar se o nome de usuário já está em uso.
+    # Sem isso, um username repetido só falhava na hora do db.session.commit()
+    # (IntegrityError não tratada -> erro 500 em vez de mensagem amigável).
+    def validate_username(self, username):
+        usuario = Usuario.query.filter_by(username=username.data).first()
+        if usuario:
+            raise ValidationError('Este nome de usuário já está em uso. Por favor, escolha outro.')
+
 class FormFoto(FlaskForm):
     foto = FileField('Foto', validators=[
         FileRequired(message='Selecione uma imagem.'),

@@ -1,374 +1,9 @@
 /* =====================================================
-   VARIÁVEIS
+   SNAPBOARD — PERFIL.CSS
+   Tokens, reset e navbar agora vivem em base.css
+   (compartilhado com feed.css e home.css). Este
+   arquivo contém apenas os estilos específicos do Perfil.
 ===================================================== */
-
-:root {
-
-    --background: #080808;
-    --surface: #111111;
-    --surface-hover: #181818;
-
-    --border: #242424;
-
-    --text: #f5f5f5;
-    --text-secondary: #999999;
-
-    --primary: #e50914;
-    --primary-hover: #ff1b26;
-
-    --shadow: rgba(0, 0, 0, .35);
-
-    --navbar-height: 72px;
-
-    --transition: .25s ease;
-}
-
-
-/* =====================================================
-   TEMA CLARO
-===================================================== */
-
-[data-theme="light"] {
-
-    --background: #f7f7f7;
-    --surface: #ffffff;
-    --surface-hover: #f0f0f0;
-
-    --border: #e2e2e2;
-
-    --text: #171717;
-    --text-secondary: #666666;
-
-    --primary: #d90814;
-    --primary-hover: #b80711;
-
-    --shadow: rgba(0, 0, 0, .08);
-}
-
-
-
-/* =====================================================
-   RESET
-===================================================== */
-
-* {
-
-    margin: 0;
-
-    padding: 0;
-
-    box-sizing: border-box;
-}
-
-
-html {
-
-    scroll-behavior: smooth;
-}
-
-
-body {
-
-    min-height: 100vh;
-
-    background: var(--background);
-
-    color: var(--text);
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
-    transition:
-        background var(--transition),
-        color var(--transition);
-}
-
-
-a {
-
-    color: inherit;
-
-    text-decoration: none;
-}
-
-
-button,
-input {
-
-    font: inherit;
-}
-
-
-
-/* =====================================================
-   NAVBAR
-===================================================== */
-
-.navbar {
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 100;
-
-    height: var(--navbar-height);
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 28px;
-
-    padding: 0 28px;
-
-    background: color-mix(
-        in srgb,
-        var(--background) 92%,
-        transparent
-    );
-
-    backdrop-filter: blur(16px);
-
-    border-bottom:
-        1px solid
-        var(--border);
-}
-
-
-.logo {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    flex-shrink: 0;
-}
-
-
-.logo img {
-
-    width: 38px;
-
-    height: 38px;
-
-    object-fit: cover;
-
-    border-radius: 10px;
-}
-
-
-.logo span {
-
-    font-size: 19px;
-
-    font-weight: 700;
-}
-
-
-.navigation {
-
-    display: flex;
-
-    gap: 4px;
-}
-
-
-.navigation-link {
-
-    padding: 9px 14px;
-
-    border-radius: 9px;
-
-    color: var(--text-secondary);
-
-    font-size: 14px;
-
-    transition: var(--transition);
-}
-
-
-.navigation-link:hover {
-
-    background: var(--surface);
-
-    color: var(--text);
-}
-
-
-.search {
-
-    position: relative;
-
-    flex: 1;
-
-    max-width: 600px;
-
-    margin: auto;
-}
-
-
-.search svg {
-
-    position: absolute;
-
-    left: 15px;
-
-    top: 50%;
-
-    width: 18px;
-
-    transform: translateY(-50%);
-
-    color: var(--text-secondary);
-}
-
-
-.search input {
-
-    width: 100%;
-
-    height: 42px;
-
-    padding: 0 15px 0 44px;
-
-    border:
-        1px solid
-        transparent;
-
-    border-radius: 10px;
-
-    outline: none;
-
-    background: var(--surface);
-
-    color: var(--text);
-}
-
-
-.search input:focus {
-
-    border-color: var(--border);
-}
-
-
-.navbar-actions {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-.icon-button {
-
-    width: 40px;
-
-    height: 40px;
-
-    display: grid;
-
-    place-items: center;
-
-    border: none;
-
-    border-radius: 50%;
-
-    background: transparent;
-
-    color: var(--text);
-
-    cursor: pointer;
-}
-
-
-.icon-button:hover {
-
-    background: var(--surface-hover);
-}
-
-
-.icon-button svg {
-
-    width: 20px;
-
-    height: 20px;
-}
-
-
-.create-button {
-
-    height: 40px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    padding: 0 14px;
-
-    border-radius: 9px;
-
-    background: var(--primary);
-
-    color: #fff;
-
-    font-size: 13px;
-
-    font-weight: 600;
-}
-
-
-.create-button:hover {
-
-    background: var(--primary-hover);
-}
-
-
-.create-button svg {
-
-    width: 17px;
-}
-
-
-.profile-link {
-
-    display: flex;
-
-    align-items: center;
-}
-
-
-.profile-avatar {
-
-    width: 38px;
-
-    height: 38px;
-
-    display: grid;
-
-    place-items: center;
-
-    border-radius: 50%;
-
-    background: var(--primary);
-
-    color: white;
-
-    font-size: 13px;
-
-    font-weight: 700;
-}
-
 
 
 /* =====================================================
@@ -769,6 +404,34 @@ input {
 }
 
 
+.upload-area.has-preview {
+
+    align-items: flex-start;
+}
+
+
+.upload-area.has-preview .upload-icon {
+
+    display: none;
+}
+
+
+.upload-preview-image {
+
+    width: 64px;
+
+    height: 64px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    object-fit: cover;
+
+    border: 1px solid var(--border);
+}
+
+
 .upload-icon {
 
     width: 45px;
@@ -1087,12 +750,6 @@ input {
 
 @media (max-width: 1000px) {
 
-    .navigation {
-
-        display: none;
-    }
-
-
     .profile-header {
 
         grid-template-columns:
@@ -1116,64 +773,6 @@ input {
 
 
 @media (max-width: 700px) {
-
-    :root {
-
-        --navbar-height: 62px;
-    }
-
-
-    .navbar {
-
-        gap: 10px;
-
-        padding: 0 14px;
-    }
-
-
-    .logo span {
-
-        display: none;
-    }
-
-
-    .logo img {
-
-        width: 36px;
-
-        height: 36px;
-    }
-
-
-    .search input {
-
-        height: 38px;
-
-        font-size: 12px;
-    }
-
-
-    .create-button {
-
-        display: none;
-    }
-
-
-    .icon-button {
-
-        width: 36px;
-
-        height: 36px;
-    }
-
-
-    .profile-avatar {
-
-        width: 34px;
-
-        height: 34px;
-    }
-
 
     .profile-page {
 

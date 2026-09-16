@@ -1,72 +1,13 @@
 
-:root {
-    --bg: #080808;
-    --bg-soft: #101010;
-    --panel: #0d0d0d;
-    --surface: #151515;
-    --surface-hover: #1b1b1b;
-    --border: #292929;
-    --text: #f7f7f7;
-    --muted: #9b9b9b;
-    --accent: #e50914;
-    --accent-2: #ff3b3b;
-    --accent-soft: rgba(229, 9, 20, .14);
-    --shadow: 0 24px 80px rgba(0, 0, 0, .38);
-}
-
-html[data-theme="light"] {
-    --bg: #f5f5f5;
-    --bg-soft: #ededed;
-    --panel: #ffffff;
-    --surface: #f7f7f7;
-    --surface-hover: #eeeeee;
-    --border: #dddddd;
-    --text: #111111;
-    --muted: #666666;
-    --accent: #d90712;
-    --accent-2: #ef202b;
-    --accent-soft: rgba(217, 7, 18, .10);
-    --shadow: 0 24px 70px rgba(0, 0, 0, .12);
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html {
-    min-height: 100%;
-    color-scheme: dark;
-    scroll-behavior: smooth;
-}
-
-html[data-theme="light"] {
-    color-scheme: light;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-                 "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition: background .3s ease, color .3s ease;
-}
-
-button,
-input {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
+/* Tokens de cor, reset e :focus-visible agora vêm de base.css.
+   Este arquivo usa os mesmos nomes de variável (--background,
+   --surface, --primary, etc.) para manter tudo consistente. */
 
 .auth-page {
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr;
-    background: var(--bg);
+    background: var(--background);
 }
 
 .brand-panel {
@@ -143,7 +84,7 @@ html[data-theme="light"] .brand-panel {
 }
 
 .brand-copy h1 span {
-    color: var(--accent);
+    color: var(--primary);
 }
 
 .brand-copy p {
@@ -175,7 +116,7 @@ html[data-theme="light"] .brand-copy p {
     align-items: center;
     justify-content: center;
     padding: 82px 22px 40px;
-    background: var(--bg);
+    background: var(--background);
 }
 
 .theme-toggle {
@@ -189,7 +130,7 @@ html[data-theme="light"] .brand-copy p {
     border: 1px solid var(--border);
     border-radius: 50%;
     background: var(--surface);
-    color: var(--muted);
+    color: var(--text-secondary);
     transition: transform .2s ease, background .2s ease, color .2s ease;
 }
 
@@ -216,7 +157,7 @@ html[data-theme="light"] .brand-copy p {
     display: block;
     margin: 0 auto 24px;
     border: 1px solid var(--border);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
 }
 
 .auth-heading {
@@ -232,7 +173,7 @@ html[data-theme="light"] .brand-copy p {
 
 .auth-heading p {
     margin: 0;
-    color: var(--muted);
+    color: var(--text-secondary);
     font-size: 14px;
     line-height: 1.6;
 }
@@ -286,8 +227,8 @@ html[data-theme="light"] .brand-copy p {
 }
 
 .form-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-soft);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-soft);
 }
 
 .password-toggle {
@@ -327,7 +268,7 @@ html[data-theme="light"] .brand-copy p {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--muted);
+    color: var(--text-secondary);
     font-size: 13px;
     cursor: pointer;
 }
@@ -336,11 +277,11 @@ html[data-theme="light"] .brand-copy p {
     width: 16px;
     height: 16px;
     margin: 0;
-    accent-color: var(--accent);
+    accent-color: var(--primary);
 }
 
 .auth-link {
-    color: var(--accent);
+    color: var(--primary);
     font-size: 13px;
     font-weight: 650;
     text-decoration: none;
@@ -348,7 +289,7 @@ html[data-theme="light"] .brand-copy p {
 }
 
 .auth-link:hover {
-    color: var(--accent-2);
+    color: var(--primary-hover);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
@@ -358,7 +299,7 @@ html[data-theme="light"] .brand-copy p {
     min-height: 50px;
     border: 0;
     border-radius: 15px;
-    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    background: linear-gradient(135deg, var(--primary-hover), var(--primary));
     color: #fff;
     font-size: 14px;
     font-weight: 750;
@@ -379,7 +320,7 @@ html[data-theme="light"] .brand-copy p {
 .switch-auth {
     margin: 26px 0 0;
     text-align: center;
-    color: var(--muted);
+    color: var(--text-secondary);
     font-size: 13px;
 }
 
@@ -392,7 +333,7 @@ html[data-theme="light"] .brand-copy p {
     padding: 12px 14px;
     border: 1px solid rgba(229, 9, 20, .35);
     border-radius: 12px;
-    background: var(--accent-soft);
+    background: var(--primary-soft);
     color: var(--text);
     font-size: 13px;
 }
@@ -469,11 +410,3 @@ html[data-theme="light"] .brand-copy p {
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-    }
-}

@@ -8,6 +8,8 @@
           content="#080808">
     <title>Início | SnapBoard</title>
     <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet"
           href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
@@ -21,15 +23,14 @@
     <!-- LOGO -->
 
     <a href="{{ url_for('homepage') }}"
-       class="brand">
+       class="logo">
 
         <img
             src="{{ url_for('static', filename='img/snapboard-logo.jpeg') }}"
             alt="SnapBoard"
-            class="brand-logo"
         >
 
-        <span class="brand-name">
+        <span>
             SnapBoard
         </span>
 
@@ -38,33 +39,20 @@
 
     <!-- NAVEGAÇÃO -->
 
-    <nav class="main-nav">
-
-        <a href="{{ url_for('login') }}"
-           class="nav-link">
-
-            Faça login
-
-        </a>
+    <nav class="navigation">
 
         <a href="{{ url_for('homepage') }}"
-           class="nav-link active">
+           class="navigation-link active">
 
             Início
 
         </a>
 
         <a href="{{ url_for('feed') }}"
-           class="nav-link">
+           class="navigation-link">
 
             Explorar
 
-        </a>
-
-        <a href="{{ url_for('logout') }}"
-           class="nav-link">
-
-            Sair
         </a>
 
     </nav>
@@ -72,10 +60,9 @@
 
     <!-- PESQUISA -->
 
-    <div class="search-container">
+    <div class="search">
 
         <svg
-            class="search-icon"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -90,9 +77,10 @@
 
         <input
             type="search"
-            class="search-input"
+            data-search-input
+            data-search-target="{{ url_for('feed') }}"
             placeholder="Pesquisar no SnapBoard..."
-            aria-label="Pesquisar"
+            aria-label="Pesquisar por usuário"
         >
 
     </div>
@@ -154,23 +142,47 @@
         </button>
 
 
+        <!-- MENU MOBILE -->
+
+        <button
+            type="button"
+            class="nav-toggle"
+            data-nav-toggle
+            aria-label="Abrir menu"
+            aria-expanded="false"
+            aria-controls="mobileNav"
+        >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 6h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 18h16"></path>
+            </svg>
+        </button>
+
+
         <!-- Perfil -->
 
         <a
             href="{{ url_for('perfil', id_usuario=current_user.id) }}"
-            class="profile-button"
+            class="profile-link"
+            aria-label="Meu perfil"
         >
 
-            <img
-                src="{{ url_for('static', filename='img/default-avatar.png') }}"
-                alt="Perfil"
-            >
+            <div class="profile-avatar" aria-hidden="true">{{ current_user.username[0]|upper }}</div>
 
         </a>
 
     </div>
 
 </header>
+
+<!-- MENU MOBILE -->
+<nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
+    <a href="{{ url_for('homepage') }}">Início</a>
+    <a href="{{ url_for('feed') }}">Explorar</a>
+    <a href="{{ url_for('perfil', id_usuario=current_user.id) }}">Meu perfil</a>
+    <a href="{{ url_for('logout') }}">Sair</a>
+</nav>
 
 
 
@@ -247,11 +259,11 @@
 ====================================================== -->
 
 <a
-    href="{{ url_for('perfil', id_usuario=current_user.id) }}"
+    href="{{ url_for('perfil', id_usuario=current_user.id) }}#nova-postagem"
     class="floating-create"
+    aria-label="Criar postagem"
 >
 
- 
     <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -270,6 +282,8 @@
      JAVASCRIPT
 ====================================================== -->
 
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
 </html>
