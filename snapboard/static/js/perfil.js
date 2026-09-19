@@ -121,14 +121,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* =====================================================
-       EDITAR PERFIL (ainda não há tela/rota de edição)
-    ===================================================== */
-
-    const editProfileButton = document.getElementById("editProfileButton");
-
-    editProfileButton?.addEventListener("click", () => {
-        window.snapboardToast?.("Edição de perfil chegando em breve.");
-    });
-
 });
