@@ -1,0 +1,56 @@
+# =========================
+# Ambiente virtual
+# =========================
+venv/
+.venv/
+env/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Banco de dados local
+# =========================
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Conteúdo enviado por usuários
+# (gerado em tempo de execução, não é código-fonte)
+# =========================
+snapboard/static/posts/*
+snapboard/static/avatars/*
+!snapboard/static/posts/.gitkeep
+!snapboard/static/avatars/.gitkeep
+
+# =========================
+# Variáveis de ambiente
+# =========================
+.env
+.env.*
+
+# Permite enviar o modelo do .env
+!.env.example
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Sistema operacional
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
