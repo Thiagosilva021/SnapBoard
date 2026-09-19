@@ -188,22 +188,25 @@
         </a>
 
 
-        <!-- PERFIL -->
+        <!-- PERFIL (sempre o do usuário logado, mesmo vendo o perfil de outra pessoa) -->
 
         <a
             href="{{ url_for(
                 'perfil',
-                id_usuario=usuario.id
+                id_usuario=current_user.id
             ) }}"
             class="profile-link"
+            aria-label="Meu perfil"
         >
-
-            <div class="profile-avatar">
-
-                {{ usuario.username[0]|upper }}
-
-            </div>
-
+            {% if current_user.foto_perfil %}
+                <div class="profile-avatar">
+                    <img src="{{ url_for('static', filename='avatars/' ~ current_user.foto_perfil) }}" alt="">
+                </div>
+            {% else %}
+                <div class="profile-avatar" aria-hidden="true">
+                    {{ current_user.username[0]|upper }}
+                </div>
+            {% endif %}
         </a>
 
     </div>
@@ -236,9 +239,11 @@
         <!-- AVATAR -->
 
         <div class="profile-avatar-large">
-
-            {{ usuario.username[0]|upper }}
-
+            {% if usuario.foto_perfil %}
+                <img src="{{ url_for('static', filename='avatars/' ~ usuario.foto_perfil) }}" alt="">
+            {% else %}
+                {{ usuario.username[0]|upper }}
+            {% endif %}
         </div>
 
 
@@ -257,11 +262,11 @@
 
 
             <p class="profile-description">
-
-                Este é o seu perfil no SnapBoard.
-                Aqui você pode compartilhar ideias,
-                referências e inspirações.
-
+                {% if usuario.bio %}
+                    {{ usuario.bio }}
+                {% else %}
+                    Este é o perfil de {{ usuario.username }} no SnapBoard.
+                {% endif %}
             </p>
 
 
@@ -306,15 +311,14 @@
 
         <div class="profile-actions">
 
-            <button
-                type="button"
+            {% if usuario.id == current_user.id %}
+            <a
+                href="{{ url_for('editar_perfil') }}"
                 class="secondary-button"
-                id="editProfileButton"
             >
-
                 Editar perfil
-
-            </button>
+            </a>
+            {% endif %}
 
         </div>
 
