@@ -11,6 +11,8 @@ class Usuario(db.Model, UserMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(254), unique=True, nullable=False)
     senha = db.Column(db.String(100), nullable=False)
+    bio = db.Column(db.String(280), nullable=True)
+    foto_perfil = db.Column(db.String(200), nullable=True)
     fotos = db.relationship(
         'Postagem', backref='usuario', cascade='all, delete-orphan',
         lazy=True, order_by='Postagem.data_criacao.desc()'

@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, current_app, request, send_from_directory
 from snapboard import app, db, bcrypt
-from snapboard.forms import FormLogin, FormCriarConta, FormFoto
+from snapboard.forms import FormLogin, FormCriarConta, FormFoto, FormEditarPerfil, FormAlterarSenha
 from snapboard.models import Usuario, Postagem, Curtida
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy.orm import joinedload
@@ -8,6 +8,27 @@ import uuid
 import os
 from werkzeug.utils import secure_filename
 from PIL import Image
+
+def validar_e_salvar_imagem(arquivo, pasta_destino):
+    """Confere que o arquivo enviado é realmente uma imagem (não só a
+    extensão) e salva com um nome único. Levanta ValueError com uma
+    mensagem amigável se o arquivo não for válido."""
+    try:
+        Image.open(arquivo.stream).verify()
+        arquivo.stream.seek(0)
+    except Exception:
+        raise ValueError('O arquivo enviado não é uma imagem válida.')
+
+    extensao = secure_filename(arquivo.filename).rsplit('.', 1)[-1].lower()
+    nome_unico = f"{uuid.uuid4().hex}.{extensao}"   # elimina colisão entre usuários
+    caminho = os.path.join(pasta_destino, nome_unico)
+
+    try:
+        arquivo.save(caminho)
+    except Exception:
+        raise ValueError('Não foi possível salvar o arquivo. Tente novamente.')
+
+    return nome_unico
 
 @app.route("/")
 def homepage():
@@ -54,20 +75,13 @@ def perfil(id_usuario):
         if form.validate_on_submit():
             arquivo = form.foto.data
 
-            # valida que o conteúdo enviado é realmente uma imagem (não só a extensão)
             try:
-                Image.open(arquivo.stream).verify()
-                arquivo.stream.seek(0)
-            except Exception:
-                flash('O arquivo enviado não é uma imagem válida.', 'danger')
+                nome_unico = validar_e_salvar_imagem(arquivo, current_app.config['UPLOAD_FOLDER'])
+            except ValueError as erro:
+                flash(str(erro), 'danger')
                 return redirect(url_for('perfil', id_usuario=current_user.id))
 
-            extensao = secure_filename(arquivo.filename).rsplit('.', 1)[-1].lower()
-            nome_unico = f"{uuid.uuid4().hex}.{extensao}"   # elimina colisão entre usuários
-            caminho = os.path.join(current_app.config['UPLOAD_FOLDER'], nome_unico)
-
             try:
-                arquivo.save(caminho)
                 foto = Postagem(imagem=nome_unico, id_usuario=current_user.id)
                 db.session.add(foto)
                 db.session.commit()
@@ -81,6 +95,64 @@ def perfil(id_usuario):
     else:
         usuario = Usuario.query.get_or_404(id_usuario)   # get_or_404 em vez de get
         return render_template('perfil.html', usuario=usuario, form=None)
+
+@app.route("/perfil/editar", methods=['GET', 'POST'])
+@login_required
+def editar_perfil():
+    form = FormEditarPerfil(obj=current_user)
+    form_senha = FormAlterarSenha()
+
+    if form.validate_on_submit():
+        if form.foto_perfil.data:
+            try:
+                nome_unico = validar_e_salvar_imagem(form.foto_perfil.data, current_app.config['AVATAR_FOLDER'])
+            except ValueError as erro:
+                flash(str(erro), 'danger')
+                return redirect(url_for('editar_perfil'))
+
+            avatar_antigo = current_user.foto_perfil
+            current_user.foto_perfil = nome_unico
+
+            # só remove o avatar antigo depois de confirmar que o novo foi salvo
+            if avatar_antigo:
+                caminho_antigo = os.path.join(current_app.config['AVATAR_FOLDER'], avatar_antigo)
+                if os.path.exists(caminho_antigo):
+                    os.remove(caminho_antigo)
+
+        current_user.username = form.username.data
+        current_user.bio = form.bio.data
+
+        try:
+            db.session.commit()
+            flash('Perfil atualizado com sucesso!', 'success')
+        except Exception:
+            db.session.rollback()
+            flash('Não foi possível salvar as alterações. Tente novamente.', 'danger')
+
+        return redirect(url_for('perfil', id_usuario=current_user.id))
+
+    return render_template('editar_perfil.html', form=form, form_senha=form_senha)
+
+@app.route("/perfil/alterar-senha", methods=['POST'])
+@login_required
+def alterar_senha():
+    form = FormEditarPerfil(obj=current_user)  # só pra re-renderizar a página em caso de erro
+    form_senha = FormAlterarSenha()
+
+    if form_senha.validate_on_submit():
+        if not bcrypt.check_password_hash(current_user.senha, form_senha.senha_atual.data):
+            flash('Senha atual incorreta.', 'danger')
+        else:
+            current_user.senha = bcrypt.generate_password_hash(form_senha.nova_senha.data).decode('utf-8')
+            try:
+                db.session.commit()
+                flash('Senha alterada com sucesso!', 'success')
+                return redirect(url_for('perfil', id_usuario=current_user.id))
+            except Exception:
+                db.session.rollback()
+                flash('Não foi possível alterar a senha. Tente novamente.', 'danger')
+
+    return render_template('editar_perfil.html', form=form, form_senha=form_senha)
 
 @app.route("/feed")
 @login_required

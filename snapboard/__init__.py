@@ -36,6 +36,10 @@ app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
 app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'posts')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+# Pasta separada pra fotos de perfil (não se mistura com as postagens)
+app.config['AVATAR_FOLDER'] = os.path.join(app.static_folder, 'avatars')
+os.makedirs(app.config['AVATAR_FOLDER'], exist_ok=True)
+
 # Limite de tamanho de upload (5 MB por requisição)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
