@@ -160,8 +160,9 @@
         </button>
 
 
-        <!-- Perfil -->
+        <!-- Perfil (ou Entrar/Criar conta, se ninguém estiver logado) -->
 
+        {% if current_user.is_authenticated %}
         <a
             href="{{ url_for('perfil', id_usuario=current_user.id) }}"
             class="profile-link"
@@ -175,6 +176,10 @@
             {% endif %}
 
         </a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="secondary-button">Entrar</a>
+        <a href="{{ url_for('criar_conta') }}" class="primary-button">Criar conta</a>
+        {% endif %}
 
     </div>
 
@@ -184,8 +189,13 @@
 <nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
     <a href="{{ url_for('homepage') }}">Início</a>
     <a href="{{ url_for('feed') }}">Explorar</a>
+    {% if current_user.is_authenticated %}
     <a href="{{ url_for('perfil', id_usuario=current_user.id) }}">Meu perfil</a>
     <a href="{{ url_for('logout') }}">Sair</a>
+    {% else %}
+    <a href="{{ url_for('login') }}">Entrar</a>
+    <a href="{{ url_for('criar_conta') }}">Criar conta</a>
+    {% endif %}
 </nav>
 
 
@@ -262,6 +272,7 @@
      BOTÃO FLUTUANTE
 ====================================================== -->
 
+{% if current_user.is_authenticated %}
 <a
     href="{{ url_for('perfil', id_usuario=current_user.id) }}#nova-postagem"
     class="floating-create"
@@ -281,6 +292,7 @@
     </svg>
 
 </a>
+{% endif %}
 
 <!-- =====================================================
      JAVASCRIPT

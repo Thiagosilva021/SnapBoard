@@ -281,7 +281,7 @@
                     </strong>
 
                     <span>
-                        Postagens
+                        {% if usuario.fotos|length == 1 %}Postagem{% else %}Postagens{% endif %}
                     </span>
 
                 </div>
@@ -290,17 +290,33 @@
                 <div class="stat-divider"></div>
 
 
-                <div class="stat">
+                <a class="stat stat-link" href="{{ url_for('lista_seguidores', id_usuario=usuario.id) }}">
 
-                    <strong>
-                        {{ usuario.fotos|length }}
+                    <strong data-contador-seguidores>
+                        {{ contagem_seguidores }}
                     </strong>
 
                     <span>
-                        Pins
+                        Seguidores
                     </span>
 
-                </div>
+                </a>
+
+
+                <div class="stat-divider"></div>
+
+
+                <a class="stat stat-link" href="{{ url_for('lista_seguindo', id_usuario=usuario.id) }}">
+
+                    <strong>
+                        {{ contagem_seguindo }}
+                    </strong>
+
+                    <span>
+                        Seguindo
+                    </span>
+
+                </a>
 
             </div>
 
@@ -318,6 +334,18 @@
             >
                 Editar perfil
             </a>
+            {% else %}
+            <form method="POST" action="{{ url_for('seguir', id_usuario=usuario.id) }}" class="follow-form" data-follow-form>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button
+                    type="submit"
+                    class="follow-button{{ ' following' if segue else '' }}"
+                    data-follow-button
+                    data-following="{{ 'true' if segue else 'false' }}"
+                >
+                    {{ 'Seguindo' if segue else 'Seguir' }}
+                </button>
+            </form>
             {% endif %}
 
         </div>
@@ -392,7 +420,8 @@
 
 
 
-            <!-- EMAIL -->
+            {% if usuario.id == current_user.id %}
+            <!-- EMAIL (visível só para o próprio dono do perfil) -->
 
             <div class="information-card">
 
@@ -435,6 +464,7 @@
                 </div>
 
             </div>
+            {% endif %}
 
         </div>
 
