@@ -166,6 +166,105 @@
 }
 
 
+.stat-link {
+
+    color: inherit;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    padding: 4px 6px;
+
+    margin: -4px -6px;
+
+    transition: background .2s ease;
+}
+
+
+.stat-link:hover {
+
+    background: var(--surface-hover);
+}
+
+
+
+/* =====================================================
+   BOTÃO DE SEGUIR
+===================================================== */
+
+.follow-form {
+
+    display: contents;
+}
+
+
+.follow-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 42px;
+
+    min-width: 120px;
+
+    padding: 0 18px;
+
+    border-radius: 9px;
+
+    border: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    background: var(--primary);
+
+    color: white;
+
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+
+.follow-button:hover {
+
+    background: var(--primary-hover);
+}
+
+
+.follow-button.following {
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    color: var(--text);
+}
+
+
+.follow-button.following:hover {
+
+    background: var(--surface-hover);
+
+    border-color: #e5484d;
+
+    color: #e5484d;
+}
+
+
+.follow-button:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+}
+
+
 
 /* =====================================================
    BOTÕES
