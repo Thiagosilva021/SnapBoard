@@ -121,4 +121,48 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    /* =====================================================
+       SEGUIR / DEIXAR DE SEGUIR
+    ===================================================== */
+
+    document.querySelectorAll("[data-follow-form]").forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const button = form.querySelector("[data-follow-button]");
+            if (!button || button.disabled) return;
+
+            button.disabled = true;
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    body: new FormData(form),
+                });
+
+                if (!response.ok) throw new Error("Falha ao seguir");
+
+                const dados = await response.json();
+
+                button.classList.toggle("following", dados.seguindo);
+                button.dataset.following = dados.seguindo ? "true" : "false";
+                button.textContent = dados.seguindo ? "Seguindo" : "Seguir";
+
+                const contadorSeguidores = document.querySelector("[data-contador-seguidores]");
+                if (contadorSeguidores) {
+                    contadorSeguidores.textContent = dados.total_seguidores;
+                }
+
+                window.snapboardToast?.(dados.seguindo ? "Você começou a seguir esse perfil." : "Você deixou de seguir esse perfil.");
+            } catch (erro) {
+                window.snapboardToast?.("Não foi possível concluir agora. Tentando de novo...");
+                form.removeAttribute("data-follow-form");
+                form.submit();
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
+
 });
