@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, current_app, request, send_from_directory
 from snapboard import app, db, bcrypt
 from snapboard.forms import FormLogin, FormCriarConta, FormFoto, FormEditarPerfil, FormAlterarSenha
-from snapboard.models import Usuario, Postagem, Curtida
+from snapboard.models import Usuario, Postagem, Curtida, Seguidor
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy.orm import joinedload
 import uuid
@@ -91,10 +91,87 @@ def perfil(id_usuario):
                 return redirect(url_for('perfil', id_usuario=current_user.id))
 
             return redirect(url_for('perfil', id_usuario=current_user.id))
-        return render_template('perfil.html', usuario=current_user, form=form)
+        return render_template(
+            'perfil.html', usuario=current_user, form=form, segue=False,
+            contagem_seguidores=current_user.seguidores.count(),
+            contagem_seguindo=current_user.seguindo.count(),
+        )
     else:
         usuario = Usuario.query.get_or_404(id_usuario)   # get_or_404 em vez de get
-        return render_template('perfil.html', usuario=usuario, form=None)
+        return render_template(
+            'perfil.html', usuario=usuario, form=None,
+            segue=current_user.segue(usuario),
+            contagem_seguidores=usuario.seguidores.count(),
+            contagem_seguindo=usuario.seguindo.count(),
+        )
+
+@app.route('/seguir/<int:id_usuario>', methods=['POST'])
+@login_required
+def seguir(id_usuario):
+    usuario = Usuario.query.get_or_404(id_usuario)
+    eh_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
+    if usuario.id == current_user.id:
+        if eh_ajax:
+            return {'sucesso': False, 'mensagem': 'Você não pode seguir a si mesmo.'}, 400
+        flash('Você não pode seguir a si mesmo.', 'danger')
+        return redirect(url_for('perfil', id_usuario=id_usuario))
+
+    relacao = Seguidor.query.filter_by(id_seguidor=current_user.id, id_seguido=usuario.id).first()
+
+    if not relacao:
+        try:
+            db.session.add(Seguidor(id_seguidor=current_user.id, id_seguido=usuario.id))
+            db.session.commit()
+            seguindo_agora = True
+        except Exception:
+            db.session.rollback()
+            if eh_ajax:
+                return {'sucesso': False, 'mensagem': 'Não foi possível seguir.'}, 500
+            flash('Não foi possível seguir. Tente novamente.', 'danger')
+            return redirect(url_for('perfil', id_usuario=id_usuario))
+    else:
+        try:
+            db.session.delete(relacao)
+            db.session.commit()
+            seguindo_agora = False
+        except Exception:
+            db.session.rollback()
+            if eh_ajax:
+                return {'sucesso': False, 'mensagem': 'Não foi possível deixar de seguir.'}, 500
+            flash('Não foi possível deixar de seguir. Tente novamente.', 'danger')
+            return redirect(url_for('perfil', id_usuario=id_usuario))
+
+    if eh_ajax:
+        return {
+            'sucesso': True,
+            'seguindo': seguindo_agora,
+            'total_seguidores': usuario.seguidores.count(),
+        }
+
+    return redirect(url_for('perfil', id_usuario=id_usuario))
+
+@app.route('/perfil/<int:id_usuario>/seguidores')
+@login_required
+def lista_seguidores(id_usuario):
+    usuario = Usuario.query.get_or_404(id_usuario)
+    pessoas = [r.seguidor for r in usuario.seguidores.order_by(Seguidor.data_criacao.desc()).all()]
+    ids_que_sigo = {r.id_seguido for r in current_user.seguindo.all()}
+    return render_template(
+        'lista_usuarios.html', usuario_perfil=usuario, titulo='Seguidores',
+        pessoas=pessoas, ids_que_sigo=ids_que_sigo
+    )
+
+@app.route('/perfil/<int:id_usuario>/seguindo')
+@login_required
+def lista_seguindo(id_usuario):
+    usuario = Usuario.query.get_or_404(id_usuario)
+    pessoas = [r.seguido for r in usuario.seguindo.order_by(Seguidor.data_criacao.desc()).all()]
+    ids_que_sigo = {r.id_seguido for r in current_user.seguindo.all()}
+    return render_template(
+        'lista_usuarios.html', usuario_perfil=usuario, titulo='Seguindo',
+        pessoas=pessoas, ids_que_sigo=ids_que_sigo
+    )
 
 @app.route("/perfil/editar", methods=['GET', 'POST'])
 @login_required
