@@ -4,7 +4,7 @@ O **SnapBoard** é uma aplicação web de compartilhamento e descoberta de image
 
 Desenvolvido com **Python e Flask**, o projeto foi construído como prática de desenvolvimento backend, autenticação, modelagem de banco de dados, segurança web e integração entre frontend e backend, evoluindo de forma incremental até uma experiência mobile-first completa.
 
-> **Status do projeto:** Em desenvolvimento ativo — funcionalidades principais implementadas e no ar.
+> **Status do projeto:** Em desenvolvimento ativo — funcionalidades principais implementadas.
 
 ---
 
