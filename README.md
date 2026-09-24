@@ -141,8 +141,3 @@ A aplicação sobe em `http://127.0.0.1:5000`.
 
 ---
 
-## Próximos passos
-
-- Evoluir a busca com resultados dedicados por usuário (além do que já filtra no feed)
-- Sistema de notificações reais (curtidas e novos seguidores)
-- Testes automatizados
