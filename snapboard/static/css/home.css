@@ -813,6 +813,18 @@
 }
 
 
+/* A barra de navegação inferior já cobre a ação de criar
+   postagem a partir daqui — evita sobrepor os dois botões. */
+@media (max-width: 767px) {
+
+    .floating-create {
+
+        display: none;
+    }
+
+}
+
+
 @media (max-width: 400px) {
 
     .search-input {

@@ -288,50 +288,126 @@ img {
     object-fit: cover;
 }
 
-/* MENU MOBILE (hambúrguer) */
+/* =====================================================
+   BARRA DE NAVEGAÇÃO INFERIOR (mobile)
+   Visível só até 767px — de 768px pra cima, a navegação
+   principal (.navigation, no topo) já fica visível, então
+   não existe intervalo de tela sem nenhuma navegação.
+===================================================== */
 
-.nav-toggle {
+.bottom-nav {
     display: none;
-    width: 40px;
-    height: 40px;
+}
+
+@media (max-width: 767px) {
+
+    .bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+        height: 60px;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        background: color-mix(in srgb, var(--background) 94%, transparent);
+        backdrop-filter: blur(16px);
+        border-top: 1px solid var(--border);
+    }
+
+    /* Dá espaço pro conteúdo não ficar escondido atrás da barra fixa */
+    body {
+        padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Toasts não podem aparecer por trás/em cima da barra inferior */
+    .toast-stack {
+        bottom: calc(60px + 16px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: none;
+    gap: 3px;
+    color: var(--text-secondary);
+    transition: color .15s ease, transform .15s ease;
+}
+
+.bottom-nav-item:active {
+    transform: scale(.92);
+}
+
+.bottom-nav-item svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.bottom-nav-item span {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .01em;
+}
+
+.bottom-nav-item.active {
+    color: var(--primary);
+}
+
+.bottom-nav-item.active svg {
+    fill: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.bottom-nav-avatar {
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: transparent;
-    color: var(--text);
+    display: grid;
+    place-items: center;
+    background: var(--primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    overflow: hidden;
+    border: 2px solid transparent;
 }
 
-.nav-toggle:hover {
-    background: var(--surface-hover);
+.bottom-nav-item.active .bottom-nav-avatar {
+    border-color: var(--primary);
 }
 
-.nav-toggle svg {
-    width: 22px;
-    height: 22px;
+.bottom-nav-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.mobile-nav-panel {
-    display: none;
-    position: fixed;
-    inset: var(--navbar-height) 0 0 0;
-    z-index: 99;
-    padding: 18px;
-    background: var(--background);
-    border-top: 1px solid var(--border);
+/* Botão "Criar", elevado e em destaque no centro da barra */
+
+.bottom-nav-create {
+    position: relative;
 }
 
-.mobile-nav-panel.open {
-    display: block;
+.bottom-nav-create svg {
+    width: 26px;
+    height: 26px;
+    color: #fff;
+    background: var(--primary);
+    border-radius: 50%;
+    padding: 9px;
+    box-sizing: content-box;
+    transform: translateY(-10px);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 45%, transparent);
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.mobile-nav-panel a {
-    display: block;
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    font-size: 15px;
-    font-weight: 500;
+.bottom-nav-create:active svg {
+    transform: translateY(-10px) scale(.92);
 }
 
 /* =====================================================
@@ -419,21 +495,22 @@ img {
    RESPONSIVIDADE DA NAVBAR
 ===================================================== */
 
-@media (max-width: 1000px) {
+@media (max-width: 767px) {
+
+    :root {
+        --navbar-height: 58px;
+    }
+
+    /* A partir daqui a navegação principal é a barra inferior;
+       o topo fica só com logo, busca e tema. */
 
     .navigation {
         display: none;
     }
 
-    .nav-toggle {
-        display: inline-flex;
-    }
-}
-
-@media (max-width: 700px) {
-
-    :root {
-        --navbar-height: 62px;
+    .create-button,
+    .navbar-actions .profile-link {
+        display: none;
     }
 
     .navbar {
@@ -446,8 +523,8 @@ img {
     }
 
     .logo img {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
     }
 
     .search input {
@@ -455,18 +532,9 @@ img {
         font-size: 12px;
     }
 
-    .create-button {
-        display: none;
-    }
-
     .icon-button {
         width: 36px;
         height: 36px;
-    }
-
-    .profile-avatar {
-        width: 34px;
-        height: 34px;
     }
 }
 
