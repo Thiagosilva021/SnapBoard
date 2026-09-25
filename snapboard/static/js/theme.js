@@ -71,25 +71,6 @@
     });
 
     /* =================================================
-       MENU MOBILE (hambúrguer)
-    ================================================= */
-
-    const navToggle = document.querySelector("[data-nav-toggle]");
-    const mobilePanel = document.querySelector("[data-mobile-nav]");
-
-    navToggle?.addEventListener("click", () => {
-        const isOpen = mobilePanel?.classList.toggle("open");
-        navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && mobilePanel?.classList.contains("open")) {
-            mobilePanel.classList.remove("open");
-            navToggle?.setAttribute("aria-expanded", "false");
-        }
-    });
-
-    /* =================================================
        TOAST — feedback rápido e não bloqueante
        Uso: window.snapboardToast("Mensagem")
     ================================================= */

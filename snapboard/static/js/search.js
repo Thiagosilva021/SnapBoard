@@ -61,4 +61,10 @@
     }
 
     input.addEventListener("input", () => applyFilter(input.value));
+
+    // Veio pela aba "Buscar" da barra inferior — já abre o teclado no campo
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("foco") === "busca") {
+        input.focus();
+    }
 })();
