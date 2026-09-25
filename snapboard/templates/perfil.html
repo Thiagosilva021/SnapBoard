@@ -145,24 +145,6 @@
         </button>
 
 
-        <!-- MENU MOBILE -->
-
-        <button
-            type="button"
-            class="nav-toggle"
-            data-nav-toggle
-            aria-label="Abrir menu"
-            aria-expanded="false"
-            aria-controls="mobileNav"
-        >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M4 6h16"></path>
-                <path d="M4 12h16"></path>
-                <path d="M4 18h16"></path>
-            </svg>
-        </button>
-
-
         <!-- CRIAR -->
 
         <a
@@ -212,15 +194,6 @@
     </div>
 
 </header>
-
-<!-- MENU MOBILE -->
-<nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
-    <a href="{{ url_for('homepage') }}">Início</a>
-    <a href="{{ url_for('feed') }}">Explorar</a>
-    <a href="{{ url_for('logout') }}">Sair</a>
-</nav>
-
-
 
 <!-- =====================================================
      CONTEÚDO
@@ -886,6 +859,7 @@
         filename='js/perfil.js'
     ) }}"
 ></script>
+{% include '_bottom_nav.html' %}
 
 </body>
 

@@ -70,6 +70,9 @@
         .user-row-info strong {
             display: block;
             font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .user-row .follow-button {
             min-height: 36px;
@@ -160,5 +163,6 @@
 
 <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+{% include '_bottom_nav.html' %}
 </body>
 </html>

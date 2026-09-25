@@ -95,23 +95,6 @@
           ></svg>
         </button>
 
-        <!-- MENU MOBILE -->
-
-        <button
-          type="button"
-          class="nav-toggle"
-          data-nav-toggle
-          aria-label="Abrir menu"
-          aria-expanded="false"
-          aria-controls="mobileNav"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M4 6h16"></path>
-            <path d="M4 12h16"></path>
-            <path d="M4 18h16"></path>
-          </svg>
-        </button>
-
         <!-- CRIAR -->
 
         <a
@@ -145,14 +128,6 @@
         </a>
       </div>
     </header>
-
-    <!-- MENU MOBILE -->
-    <nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
-      <a href="{{ url_for('homepage') }}">Início</a>
-      <a href="{{ url_for('feed') }}">Explorar</a>
-      <a href="{{ url_for('perfil', id_usuario=current_user.id) }}">Meu perfil</a>
-      <a href="{{ url_for('logout') }}">Sair</a>
-    </nav>
 
     <!-- =====================================================
      CONTEÚDO
@@ -492,29 +467,6 @@
       {% endif %}
     </main>
 
-    <!-- =====================================================
-     BOTÃO FLUTUANTE MOBILE
-===================================================== -->
-
-    <a
-      href="{{ url_for(
-        'perfil',
-        id_usuario=current_user.id
-    ) }}#nova-postagem"
-      class="floating-create"
-      aria-label="Criar postagem"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path d="M12 5v14"></path>
-        <path d="M5 12h14"></path>
-      </svg>
-    </a>
-
     <!-- JAVASCRIPT -->
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
@@ -523,5 +475,6 @@
         'static',
         filename='js/feed.js'
     ) }}"></script>
+    {% include '_bottom_nav.html' %}
   </body>
 </html>

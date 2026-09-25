@@ -118,7 +118,7 @@
                     <div class="avatar-edit-preview" id="avatarPreview">{{ current_user.username[0]|upper }}</div>
                 {% endif %}
 
-                <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 0;">
                     {{ form.foto_perfil.label(class="form-label") }}
                     {{ form.foto_perfil(id="foto_perfil") }}
                     {% if form.foto_perfil.errors %}
@@ -230,5 +230,6 @@
         }
     });
 </script>
+{% include '_bottom_nav.html' %}
 </body>
 </html>

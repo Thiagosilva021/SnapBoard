@@ -142,24 +142,6 @@
         </button>
 
 
-        <!-- MENU MOBILE -->
-
-        <button
-            type="button"
-            class="nav-toggle"
-            data-nav-toggle
-            aria-label="Abrir menu"
-            aria-expanded="false"
-            aria-controls="mobileNav"
-        >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <path d="M4 6h16"></path>
-                <path d="M4 12h16"></path>
-                <path d="M4 18h16"></path>
-            </svg>
-        </button>
-
-
         <!-- Perfil (ou Entrar/Criar conta, se ninguém estiver logado) -->
 
         {% if current_user.is_authenticated %}
@@ -184,19 +166,6 @@
     </div>
 
 </header>
-
-<!-- MENU MOBILE -->
-<nav class="mobile-nav-panel" id="mobileNav" data-mobile-nav aria-label="Navegação móvel">
-    <a href="{{ url_for('homepage') }}">Início</a>
-    <a href="{{ url_for('feed') }}">Explorar</a>
-    {% if current_user.is_authenticated %}
-    <a href="{{ url_for('perfil', id_usuario=current_user.id) }}">Meu perfil</a>
-    <a href="{{ url_for('logout') }}">Sair</a>
-    {% else %}
-    <a href="{{ url_for('login') }}">Entrar</a>
-    <a href="{{ url_for('criar_conta') }}">Criar conta</a>
-    {% endif %}
-</nav>
 
 
 
@@ -301,5 +270,6 @@
 <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 <script src="{{ url_for('static', filename='js/search.js') }}"></script>
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% include '_bottom_nav.html' %}
 </body>
 </html>

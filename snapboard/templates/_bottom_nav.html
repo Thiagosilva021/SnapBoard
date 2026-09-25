@@ -1,0 +1,64 @@
+{# =====================================================
+   BARRA DE NAVEGAÇÃO INFERIOR (mobile)
+   Incluída em toda página autenticada. Só renderiza algo
+   se houver um usuário logado (current_user.is_authenticated).
+   O item ativo é determinado por request.endpoint, que o
+   Flask/Jinja já disponibiliza automaticamente — não precisa
+   passar nada extra de cada rota.
+===================================================== #}
+{% if current_user.is_authenticated %}
+<nav class="bottom-nav" aria-label="Navegação principal">
+
+    <a
+        href="{{ url_for('homepage') }}"
+        class="bottom-nav-item{{ ' active' if request.endpoint == 'homepage' else '' }}"
+        aria-label="Início"
+        {% if request.endpoint == 'homepage' %}aria-current="page"{% endif %}
+    >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 11.5 12 4l9 7.5"></path>
+            <path d="M5.5 10v9a1 1 0 0 0 1 1H10v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V20h3.5a1 1 0 0 0 1-1v-9"></path>
+        </svg>
+        <span>Início</span>
+    </a>
+
+    <a
+        href="{{ url_for('feed') }}?foco=busca"
+        class="bottom-nav-item{{ ' active' if request.endpoint == 'feed' else '' }}"
+        aria-label="Explorar"
+        {% if request.endpoint == 'feed' %}aria-current="page"{% endif %}
+    >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-4-4"></path>
+        </svg>
+        <span>Explorar</span>
+    </a>
+
+    <a
+        href="{{ url_for('perfil', id_usuario=current_user.id) }}#nova-postagem"
+        class="bottom-nav-item bottom-nav-create"
+        aria-label="Criar postagem"
+    >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 5v14"></path>
+            <path d="M5 12h14"></path>
+        </svg>
+    </a>
+
+    <a
+        href="{{ url_for('perfil', id_usuario=current_user.id) }}"
+        class="bottom-nav-item{{ ' active' if request.endpoint == 'perfil' and request.view_args and request.view_args.get('id_usuario') == current_user.id else '' }}"
+        aria-label="Perfil"
+        {% if request.endpoint == 'perfil' and request.view_args and request.view_args.get('id_usuario') == current_user.id %}aria-current="page"{% endif %}
+    >
+        {% if current_user.foto_perfil %}
+            <div class="bottom-nav-avatar"><img src="{{ url_for('static', filename='avatars/' ~ current_user.foto_perfil) }}" alt=""></div>
+        {% else %}
+            <div class="bottom-nav-avatar" aria-hidden="true">{{ current_user.username[0]|upper }}</div>
+        {% endif %}
+        <span>Perfil</span>
+    </a>
+
+</nav>
+{% endif %}
